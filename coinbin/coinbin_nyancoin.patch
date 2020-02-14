@@ -1,0 +1,141 @@
+From 005e8481bc3b564a79632545fb55bb706e952b92 Mon Sep 17 00:00:00 2001
+From: Wowee0 <co81407@coxj.com>
+Date: Tue, 17 Sep 2019 09:05:44 -0500
+Subject: [PATCH] nyancoin support
+
+---
+ index.html    |  3 +++
+ js/coinbin.js | 70 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 73 insertions(+)
+
+diff --git a/index.html b/index.html
+index d0df43e3..35197c4b 100644
+--- a/index.html
++++ b/index.html
+@@ -1356,6 +1356,7 @@ <h2>Settings <small> making coinb.in even better!</small></h2>
+ 									<option value="litecoin_mainnet" rel="0x30;0xb0;0x32;0x019da462;0x019d9cfe;blockcypher_litecoin;blockcypher_litecoin">Litecoin (mainnet)</option>
+ 									<option value="dogecoin_mainnet" rel="0x1e;0x9e;0x16;0x0827421e;0x089944e4;blockcypher_dogecoin;blockcypher_dogecoin">Dogecoin (mainnet)</option>
+ 									<option value="carboncoin_mainnet" rel="0x2f;0xaf;0x05;0x488b21e;0x488ade4;cryptoid.info_carboncoin;cryptoid.info_carboncoin">Carboncoin (mainnet)</option>
++									<option value="nyancoin_mainnet" rel="0x2d;0xad;0x16;0x0827421e;0x089944e4;sharky.pw_nyancoin;nyanchain.com_nyancoin">Nyancoin (mainnet)</option>
+ 									<option value="shadowcash_mainnet" rel="0x3f;0xbf;0x7d;0xee80286a;0xee8031e8;false;false">ShadowCash (mainnet)</option>
+ 									<option value="bitcoin_testnet" rel="0x6f;0xef;0xc4;0x043587cf;0x04358394;false;false">Bitcoin (testnet)</option>
+ 
+@@ -1421,6 +1422,7 @@ <h2>Settings <small> making coinb.in even better!</small></h2>
+ 									<option value="chain.so_litecoin"> Chain.so (Litecoin)</option>
+ 									<option value="chain.so_dogecoin"> Chain.so (Dogecoin)</option>
+ 									<option value="cryptoid.info_carboncoin"> Cryptoid.info (Carboncoin)</option>
++									<option value="sharky.pw_nyancoin"> sharky.pw (Nyancoin)</option>
+ 								</select>
+ 							</div>
+ 						</div>
+@@ -1443,6 +1445,7 @@ <h2>Settings <small> making coinb.in even better!</small></h2>
+ 									<option value="chain.so_litecoin"> Chain.so (Litecoin)</option>
+ 									<option value="chain.so_dogecoin"> Chain.so (Dogecoin)</option>
+ 									<option value="cryptoid.info_carboncoin"> Cryptoid.info (Carboncoin)</option>
++									<option value="nyanchain.com_nyancoin"> nyanchain.com (Nyancoin)</option>
+ 								</select>
+ 							</div>
+ 						</div>
+diff --git a/js/coinbin.js b/js/coinbin.js
+index 69f266d7..92a162c3 100644
+--- a/js/coinbin.js
++++ b/js/coinbin.js
+@@ -935,6 +935,8 @@ $(document).ready(function() {
+ 
+ 		} else if(host=='cryptoid.info_carboncoin'){
+ 			listUnspentCryptoidinfo_Carboncoin(redeem);
++		} else if(host=='nyanchain.com_nyancoin'){
++			listUnspentNyanchaincom_Nyancoin(redeem);
+ 		} else {
+ 			listUnspentDefault(redeem);
+ 		}
+@@ -1145,6 +1147,41 @@ $(document).ready(function() {
+ 	}
+ 
+ 
++	/* retrieve unspent data from nyanchain.com for nyancoin */
++	function listUnspentNyanchaincom_Nyancoin(redeem){
++		$.ajax ({
++			type: "GET",
++			url: "https://www.nyanchain.com/a/unspent.nyan?"+redeem.addr,
++			dataType: "json",
++			error: function(data) {
++				$("#redeemFromStatus").removeClass('hidden').html('<span class="glyphicon glyphicon-exclamation-sign"></span> Unexpected error, unable to retrieve unspent outputs!');
++			},
++			success: function(data) {
++				if((data.status && data.data) && data.status=='success'){
++					$("#redeemFromAddress").removeClass('hidden').html(
++						'<span class="glyphicon glyphicon-info-sign"></span> Retrieved unspent inputs from address <a href="'+explorer_addr+redeem.addr+'" target="_blank">'+redeem.addr+'</a>');
++					for(var i in data.data.txs){
++						var o = data.data.txs[i];
++						var tx = ((""+o.txid).match(/.{1,2}/g).reverse()).join("")+'';
++						if(tx.match(/^[a-f0-9]+$/)){
++							var n = o.output_no;
++							var script = (redeem.redeemscript==true) ? redeem.decodedRs : o.script_hex;
++							var amount = o.value;
++							addOutput(tx, n, script, amount);
++						}
++					}
++				} else {
++					$("#redeemFromStatus").removeClass('hidden').html('<span class="glyphicon glyphicon-exclamation-sign"></span> Unexpected error, unable to retrieve unspent outputs.');
++				}
++			},
++			complete: function(data, status) {
++				$("#redeemFromBtn").html("Load").attr('disabled',false);
++				totalInputAmount();
++			}
++		});
++	}
++
++
+ 	/* retrieve unspent data from blockchair */
+ 	function listUnspentBlockchair(redeem,network){
+ 		$.ajax ({
+@@ -1326,6 +1363,35 @@ $(document).ready(function() {
+ 		});
+ 	}
+ 
++	// broadcast transaction via sharky.pw for nyancoin
++	function rawSubmitsharkypw_Nyancoin(thisbtn) {
++		$(thisbtn).val('Please wait, loading...').attr('disabled',true);
++		$.ajax ({
++			type: "POST",
++			url: "https://nyan.sharky.pw/send_tx.php",
++			data: '{"tx_hex":"'+$("#rawTransaction").val()+'"}',
++			dataType: "json",
++			error: function(data) {
++				var obj = $.parseJSON(data.responseText);
++				var r = ' ' + obj.error;
++				r = (r!='') ? r : ' Failed to broadcast'; // build response
++				$("#rawTransactionStatus").addClass('alert-danger').removeClass('alert-success').removeClass("hidden").html(r).prepend('<span class="glyphicon glyphicon-exclamation-sign"></span>');
++			},
++			success: function(data) {
++				var txid = data.txid;
++				if (txid.length == 64) {
++					$("#rawTransactionStatus").addClass('alert-success').removeClass('alert-danger').removeClass("hidden").html(' Txid: ' + txid);
++				} else {
++					$("#rawTransactionStatus").addClass('alert-danger').removeClass('alert-success').removeClass("hidden").html(' Unexpected error, please try again').prepend('<span class="glyphicon glyphicon-exclamation-sign"></span>');
++				}
++			},
++			complete: function(data, status) {
++				$("#rawTransactionStatus").fadeOut().fadeIn();
++				$(thisbtn).val('Submit').attr('disabled',false);
++			}
++		});
++	}
++
+ 	// broadcast transaction via chain.so (mainnet)
+ 	function rawSubmitChainso(thisbtn, network){ 
+ 		$(thisbtn).val('Please wait, loading...').attr('disabled',true);
+@@ -1958,6 +2024,10 @@ $(document).ready(function() {
+ 			$("#rawSubmitBtn").click(function(){
+ 				rawSubmitcryptoid_Carboncoin(this);
+ 			});
++		} else if(host=="sharky.pw_nyancoin"){
++			$("#rawSubmitBtn").click(function(){
++				rawSubmitsharkypw_Nyancoin(this);
++			});
+ 		} else {
+ 			$("#rawSubmitBtn").click(function(){
+ 				rawSubmitDefault(this); // revert to default
+

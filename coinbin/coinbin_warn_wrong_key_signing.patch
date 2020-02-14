@@ -1,0 +1,73 @@
+From 70210b82fc59a6145ee3f4041508f193b31cffc2 Mon Sep 17 00:00:00 2001
+From: Wowee0 <co81407@coxj.com>
+Date: Mon, 14 Oct 2019 17:43:35 -0500
+Subject: [PATCH] warn if script could not be signed
+
+---
+ js/coin.js    |  3 ++-
+ js/coinbin.js | 16 ++++++++++++++--
+ 2 files changed, 16 insertions(+), 3 deletions(-)
+
+diff --git a/js/coin.js b/js/coin.js
+index b25c197c..6fa4fc83 100644
+--- a/js/coin.js
++++ b/js/coin.js
+@@ -1584,7 +1584,7 @@
+ 		}
+ 
+ 		/* sign inputs */
+-		r.sign = function(wif, sigHashType){
++		r.sign = function(wif, sigHashType, warnings){
+ 			var shType = sigHashType || 1;
+ 			for (var i = 0; i < this.ins.length; i++) {
+ 				var d = this.extractScriptKey(i);
+@@ -1607,6 +1607,7 @@
+ 
+ 				} else {
+ 					// could not sign
++					warnings.push("could not sign input "+(i+1)+" using the supplied private key");
+ 				}
+ 			}
+ 			return this.serialize();
+diff --git a/js/coinbin.js b/js/coinbin.js
+index 69f266d7..601c9b86 100644
+--- a/js/coinbin.js
++++ b/js/coinbin.js
+@@ -1678,6 +1678,8 @@ $(document).ready(function() {
+ 	$("#signBtn").click(function(){
+ 		var wifkey = $("#signPrivateKey");
+ 		var script = $("#signTransaction");
++		wifkey.val(wifkey.val().trimLeft().trimRight()); // sanitize
++		script.val(script.val().trimLeft().trimRight()); // sanitize
+ 
+ 		if(coinjs.addressDecode(wifkey.val())){
+ 			$(wifkey).parent().removeClass('has-error');
+@@ -1696,8 +1698,17 @@ $(document).ready(function() {
+ 			try {
+ 				var tx = coinjs.transaction();
+ 				var t = tx.deserialize(script.val());
+-
+-				var signed = t.sign(wifkey.val(), $("#sighashType option:selected").val());
++				var warnings = new Array();
++				var signed = t.sign(wifkey.val(), $("#sighashType option:selected").val(), warnings);
++				if (signed == script.val()) {
++					// if signed script is identical to the input,
++					// output a warning telling user to check inputs.
++					// most likely they chose the wrong WIF key for signing
++					$("#signedDataError").removeClass('hidden');
++					if (warnings.length > 0) {
++						$("#signedDataError").html("Warning: " + warnings.toString());
++					}
++				}
+ 				$("#signedData textarea").val(signed);
+ 				$("#signedData .txSize").html(t.size());
+ 				$("#signedData").removeClass('hidden').fadeIn();
+@@ -1705,6 +1716,7 @@ $(document).ready(function() {
+ 				// console.log(e);
+ 			}
+ 		} else {
++			$("#signedDataError").html("There is a problem with one or more of your inputs, please check and try again");
+ 			$("#signedDataError").removeClass('hidden');
+ 			$("#signedData").addClass('hidden');
+ 		}
+

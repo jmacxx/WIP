@@ -1,0 +1,67 @@
+From 043f48bac8f01902313449ae1637befc1764908f Mon Sep 17 00:00:00 2001
+From: Wowee0 <co81407@coxj.com>
+Date: Tue, 17 Sep 2019 08:26:09 -0500
+Subject: [PATCH 1/2] UI issue wrt/removing first UTXO, submitted as PR#190 on
+ 2019-08-17
+
+---
+ js/coinbin.js | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/js/coinbin.js b/js/coinbin.js
+index 69f266d7..1bb96c54 100644
+--- a/js/coinbin.js
++++ b/js/coinbin.js
+@@ -782,9 +782,25 @@ $(document).ready(function() {
+ 		window.location = "#fees";
+ 	});
+ 
++	// this is when the user clicks on the '-' button on the FIRST row of inputs only
++	// there is a different function for the '-' button on other rows
+ 	$(".txidClear").click(function(){
+-		$("#inputs .row:first input").attr('disabled',false);
+-		$("#inputs .row:first input").val("");
++		var numTxIns = $('#inputs div.row').length;
++		if (numTxIns > 1) {
++			// when there are subsequent rows of data we want the
++			// second row data moved into this row, and the second row deleted
++			// github coinbin/issues/132
++			$("#inputs .txId:first").val($("#inputs .txId")[1].value);
++			$("#inputs .txIdN:first").val($("#inputs .txIdN")[1].value);
++			$("#inputs .txIdScript:first").val($("#inputs .txIdScript")[1].value);
++			$("#inputs .txIdAmount:first").val($("#inputs .txIdAmount")[1].value);
++			$(this).parent().parent().next().fadeOut().remove(); // remove the second row
++		}
++		else {
++			$("#inputs .row:first input").val("");
++			// when clearing the first row, enable it so user can enter information manually
++			$("#inputs .row:first input").attr('disabled',false);
++		}
+ 		totalInputAmount();
+ 	});
+ 
+
+From 069b44c4a095a10fb22ac14b635639d787e7dc9a Mon Sep 17 00:00:00 2001
+From: Wowee0 <co81407@coxj.com>
+Date: Mon, 9 Dec 2019 22:32:11 -0600
+Subject: [PATCH 2/2] prev inputs were not cleared correctly
+
+---
+ js/coinbin.js | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/js/coinbin.js b/js/coinbin.js
+index 1bb96c54..404fffd9 100644
+--- a/js/coinbin.js
++++ b/js/coinbin.js
+@@ -916,7 +916,8 @@ $(document).ready(function() {
+ 		}
+ 
+ 		if($("#clearInputsOnLoad").is(":checked")){
+-			$("#inputs .txidRemove, #inputs .txidClear").click();
++			$("#inputs .txidRemove").click();
++			$("#inputs .txidClear").click();
+ 		}
+ 
+ 		$("#redeemFromBtn").html("Please wait, loading...").attr('disabled',true);
+
