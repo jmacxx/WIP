@@ -1,15 +1,14 @@
-From 043f48bac8f01902313449ae1637befc1764908f Mon Sep 17 00:00:00 2001
+From 8735c01239b5c060198a033641081bc8f63ae539 Mon Sep 17 00:00:00 2001
 From: Wowee0 <co81407@coxj.com>
-Date: Tue, 17 Sep 2019 08:26:09 -0500
-Subject: [PATCH 1/2] UI issue wrt/removing first UTXO, submitted as PR#190 on
- 2019-08-17
+Date: Wed, 25 Dec 2019 19:00:30 -0600
+Subject: [PATCH] UI issue wrt/removing first UTXO
 
 ---
- js/coinbin.js | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ js/coinbin.js | 23 ++++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
 
 diff --git a/js/coinbin.js b/js/coinbin.js
-index 69f266d7..1bb96c54 100644
+index ede27692..55749cc6 100644
 --- a/js/coinbin.js
 +++ b/js/coinbin.js
 @@ -782,9 +782,25 @@ $(document).ready(function() {
@@ -40,21 +39,7 @@ index 69f266d7..1bb96c54 100644
  		totalInputAmount();
  	});
  
-
-From 069b44c4a095a10fb22ac14b635639d787e7dc9a Mon Sep 17 00:00:00 2001
-From: Wowee0 <co81407@coxj.com>
-Date: Mon, 9 Dec 2019 22:32:11 -0600
-Subject: [PATCH 2/2] prev inputs were not cleared correctly
-
----
- js/coinbin.js | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/js/coinbin.js b/js/coinbin.js
-index 1bb96c54..404fffd9 100644
---- a/js/coinbin.js
-+++ b/js/coinbin.js
-@@ -916,7 +916,8 @@ $(document).ready(function() {
+@@ -900,7 +916,8 @@ $(document).ready(function() {
  		}
  
  		if($("#clearInputsOnLoad").is(":checked")){

@@ -1,7 +1,7 @@
-From 70210b82fc59a6145ee3f4041508f193b31cffc2 Mon Sep 17 00:00:00 2001
+From c66cd8c95333167d1a2c9f3d9b15c2571e5e04ea Mon Sep 17 00:00:00 2001
 From: Wowee0 <co81407@coxj.com>
-Date: Mon, 14 Oct 2019 17:43:35 -0500
-Subject: [PATCH] warn if script could not be signed
+Date: Wed, 25 Dec 2019 18:57:49 -0600
+Subject: [PATCH] warn if wrong key used for signing
 
 ---
  js/coin.js    |  3 ++-
@@ -9,10 +9,10 @@ Subject: [PATCH] warn if script could not be signed
  2 files changed, 16 insertions(+), 3 deletions(-)
 
 diff --git a/js/coin.js b/js/coin.js
-index b25c197c..6fa4fc83 100644
+index 2c03e146..b1144c35 100644
 --- a/js/coin.js
 +++ b/js/coin.js
-@@ -1584,7 +1584,7 @@
+@@ -1617,7 +1617,7 @@
  		}
  
  		/* sign inputs */
@@ -21,7 +21,7 @@ index b25c197c..6fa4fc83 100644
  			var shType = sigHashType || 1;
  			for (var i = 0; i < this.ins.length; i++) {
  				var d = this.extractScriptKey(i);
-@@ -1607,6 +1607,7 @@
+@@ -1640,6 +1640,7 @@
  
  				} else {
  					// could not sign
@@ -30,10 +30,10 @@ index b25c197c..6fa4fc83 100644
  			}
  			return this.serialize();
 diff --git a/js/coinbin.js b/js/coinbin.js
-index 69f266d7..601c9b86 100644
+index ede27692..094a4d00 100644
 --- a/js/coinbin.js
 +++ b/js/coinbin.js
-@@ -1678,6 +1678,8 @@ $(document).ready(function() {
+@@ -1691,6 +1691,8 @@ $(document).ready(function() {
  	$("#signBtn").click(function(){
  		var wifkey = $("#signPrivateKey");
  		var script = $("#signTransaction");
@@ -42,7 +42,7 @@ index 69f266d7..601c9b86 100644
  
  		if(coinjs.addressDecode(wifkey.val())){
  			$(wifkey).parent().removeClass('has-error');
-@@ -1696,8 +1698,17 @@ $(document).ready(function() {
+@@ -1709,8 +1711,17 @@ $(document).ready(function() {
  			try {
  				var tx = coinjs.transaction();
  				var t = tx.deserialize(script.val());
@@ -62,7 +62,7 @@ index 69f266d7..601c9b86 100644
  				$("#signedData textarea").val(signed);
  				$("#signedData .txSize").html(t.size());
  				$("#signedData").removeClass('hidden').fadeIn();
-@@ -1705,6 +1716,7 @@ $(document).ready(function() {
+@@ -1718,6 +1729,7 @@ $(document).ready(function() {
  				// console.log(e);
  			}
  		} else {
