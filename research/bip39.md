@@ -13,7 +13,7 @@ There are some non-standard variants of BIP39, for example the popular electrum 
 There are two separate use-cases to consider: creating a mnemonic phrase and transforming the mnemonic phrase into a seed (master private key).
 
 
-##Creating a mnemonic phrase
+## Creating a mnemonic phrase
 
 Generate entropy (random number).  Typically 256 bits for a 24 word phrase, although shorter ones are also described in the BIP-39 spec.
 Hash the entropy (SHA-256), the checksum will be the first 8 bits of the hash in this example.  Append the checksum bits to the original entropy.
@@ -25,7 +25,7 @@ Note that the entropy is not the same as the seed which is produced when the mne
 
 
 
-##Decoding the seed from a mnemonic phrase
+## Decoding the seed from a mnemonic phrase
 
 When a user inputs the mnemonic phrase, you want to verify that the data is correct by computing the checksum.
 Convert the words into 11 bit binary numbers, reverse of above procedure.  Combine into one long binary number.
@@ -44,7 +44,7 @@ PBKDF2 is typically provided by a cryptographic library.
 
 
 
-##Example:
+## Example:
 
     entropy=596f57cad42760e30ca6438862acb090c312d139421ccf73027862ebabe948f2
     hash-256 = eb385ac7c289b751aa84bfce5e120ccbc0cb8f4122cb369b5ef26c97ad3a9194, so checksum is eb
@@ -76,7 +76,7 @@ PBKDF2 is typically provided by a cryptographic library.
     01011101011 => 747 => frost
 
 
-###Python code for generating mnemonic phrase:
+### Python code for generating mnemonic phrase:
 
 	ent = "596f57cad42760e30ca6438862acb090c312d139421ccf73027862ebabe948f2"
 	entbytes = codecs.decode(ent, 'hex_codec')
@@ -92,7 +92,7 @@ PBKDF2 is typically provided by a cryptographic library.
 		print("{:s} => {:d} => {:s}".format(binIndex,intIndex,myword))
 
 
-###Python code for verifying the checksum:
+### Python code for verifying the checksum:
 
 	myWordArray = myMnemonic.split(' ')
 	mybigint = sum([wordlist_english.index(w) << (11 * x) for x, w in enumerate(myWordArray[::-1])])
@@ -105,7 +105,7 @@ PBKDF2 is typically provided by a cryptographic library.
 	validChecksum = (calcdChecksum == suppliedChksum)
 
 
-###Python code for converting mnemonic to master private key:
+### Python code for converting mnemonic to master private key:
 
 	from hashlib import pbkdf2_hmac
 	myMnemonic = 'floor kingdom verify portion invite immense crater silent mask betray club canoe couple hammer topic drum sorry object own shift rival visa cat frost'

@@ -7,13 +7,13 @@ I had a very hard time figuring out how to program segwit transactions.  This do
 
 I ACCEPT NO LIABILITY FOR THE ACCURACY OF THIS DOCUMENT, IT IS MY NOTES ONLY FOR MY OWN PERSONAL USE.
 
-----
-###Prerequisite
+### Prerequisite
+
 An understanding of how legacy transactions are built (see 'Bitcoins the Hard Way' #ref:5)
 
 
-----
 ## What is Segwit?
+
 Segwit (Segregated Witness) is a newer Bitcoin transaction format (circa 2017) which separates the signature from the transaction
 data.  The reason for this change is to solve the 'transaction malleability problem' in other words a segwit transaction id
 will always be the same even if you build and sign the transaction more than once. (#ref:4)
@@ -23,8 +23,7 @@ there is also what I refer to as 'transitional' segwit which is kind of a mashup
 and segwit worlds (known as segwit-embedded-in-P2SH).  It was created so existing wallet software would retain some compatibility; I am not going to consider it right now.
 
 
-----
-##Types of segwit transactions
+## Types of segwit transactions
 
 P2WPKH - Pay To Witness Public Key Hash
 
@@ -32,7 +31,8 @@ P2WSH - Pay To Witness Script Hash
 
 
 
-###P2WPKH
+### P2WPKH
+
 P2WPKH is the easier of the two.  It uses bech32 and is the segwit equivalent of legacy ('1' addresses), i.e. all that 
 is needed to spend a UTXO is a private key.  The format of transactions is slightly different than legacy.  
 The primary difference is that the transaction hash (aka TxId) is calculated 
@@ -71,8 +71,8 @@ The preimage is double-SHA256 hashed and the resultant 32 bytes are signed using
 
 
 
-----
-###TxId
+### TxId
+
 The transaction Id is calculated by double-SHA256 hash of the following unsigned block
 Note that there is no segwit marker or witness block here.
 
@@ -82,8 +82,7 @@ Note that there is no segwit marker or witness block here.
 
 
 
-----
-###FUNDING TX
+### FUNDING TX
 
 legacy txn paying to a segwit address
 
@@ -104,8 +103,8 @@ Note here that the output address field begins with 00 followed by [Push20][ripe
 
 In order to spend a segwit UTXO you have to use a segwit transaction:
 
-----
-###REDEEMING TX
+### REDEEMING TX
+
 segwit
 
 
