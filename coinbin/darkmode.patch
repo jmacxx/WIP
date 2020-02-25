@@ -1,0 +1,20 @@
+diff --git a/js/coinbin.js b/js/coinbin.js
+index ede2769..fd2d5d7 100644
+--- a/js/coinbin.js
++++ b/js/coinbin.js
+@@ -2,6 +2,15 @@ $(document).ready(function() {
+ 
+ 	/* open wallet code */
+ 
++	var themes = {
++		"default": "css/bootstrap.min.css",
++		"slate" : "css/bootswatch/slate/bootstrap.min.css",
++	}
++	var themeurl = themes['slate'];
++	var themesheet = $('<link href="'+themeurl+'" rel="stylesheet" />');
++	themesheet.appendTo('head');
++	//themesheet.attr('href',themeurl);
++
+ 	var explorer_tx = "https://coinb.in/tx/"
+ 	var explorer_addr = "https://coinb.in/addr/"
+ 	var explorer_block = "https://coinb.in/block/"
