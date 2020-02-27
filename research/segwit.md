@@ -29,12 +29,24 @@ P2WPKH - Pay To Witness Public Key Hash
 
 P2WSH - Pay To Witness Script Hash
 
+Both P2WPKH and P2WSH use **bech32** for encoding addresses.
 
 
 ### P2WPKH
 
-P2WPKH is the easier of the two.  It uses bech32 and is the segwit equivalent of legacy ('1' addresses), i.e. all that 
-is needed to spend a UTXO is a private key.  The format of transactions is slightly different than legacy.  
+P2WPKH is the easier of the two.  It is the segwit equivalent of legacy ('1' addresses), i.e. all that 
+is needed to spend a UTXO is a private key.    
+
+### P2WSH
+
+P2WSH is the segwit equivalent of legacy ('3' addresses).  The address represents the hash of a [script](https://en.bitcoin.it/wiki/Script).
+The only way to spend a P2WSH UTXO is by providing the exact script that will hash to the address, and 
+obviously satisfying the script program itself when run on bitcoin core.
+
+
+### Transaction format
+
+The format of transactions is slightly different than legacy.  
 The primary difference is that the transaction hash (aka TxId) is calculated 
 by hashing the **data** of the transaction only, whereas in Legacy the TxId is hash of the entire data including signature. (#ref:2)
 
@@ -47,8 +59,6 @@ To illustrate it clearly, here is the outline of a legacy compared to a segwit t
 
     legacy: 01000000      [nIns][prevout][nidx] [scriptSig] [nSequence] [nOuts][amount][addr/script]                      [nLocktime]
     segwit: 01000000 0001 [nIns][prevout][nidx] [00]        [nSequence] [nOuts][amount][addr/script] [nWitness] [witness] [nLocktime]
-
-
 
 
 Witness signature is calculated as follows.  Assemble what is known as the 'hash preimage' from the following available data:
@@ -82,7 +92,7 @@ Note that there is no segwit marker or witness block here.
 
 
 
-### FUNDING TX
+### Funding TX
 
 legacy txn paying to a segwit address
 
@@ -97,15 +107,19 @@ legacy txn paying to a segwit address
     00000000
 
 
-Note here that the output address field begins with 00 followed by [Push20][ripemd160address].  The 00 is the indicator that the UTXO is Segwit.
+Note here that the output address field begins with 00 followed by `[Push20][ripemd160address]`  
+The `00` is the indicator that the UTXO is Segwit.  
+The `[Push20]` indicates that it is paying to a P2WPKH address.
+If it was a `[Push32]` it would be paying to a P2WSH address.
 
 
+
+
+### Redeeming TX (P2WPKH)
 
 In order to spend a segwit UTXO you have to use a segwit transaction:
 
-### REDEEMING TX
-
-segwit
+segwit txn spending a P2WPKH UTXO to a legacy address
 
 
     01000000 0001
@@ -127,9 +141,52 @@ The signature must correspond to the hash of the preimage data, signed by the pr
 In other words what bitcoin core does is build the preimage again, and runs a 'signature verification' algorithm. This returns true if the supplied signature was obtained by signing the preimage that matches the public key.
 
 
+
+### Redeeming TX (P2WSH)
+
+segwit txn spending a P2WSH UTXO to a legacy address.
+
+This example came from [here](https://bitcoindev.network/guides/bitcoinjs-lib/bitcoin-script-puzzles/).
+
+
+    01000000 0001
+    01
+        a6bf33ccfa220b3412d1d06df6daec217ae263c775e6cb18fbd7b3d990b73aa6 00000000
+        00
+        feffffff
+    01
+        800c000000000000 1976a914a447681601eef322926c0b3de5dfbb4157bbe40988ac
+    03
+        01 02
+        01 03
+        03 935587
+    00000000
+    txId=b46682d04aefbe774f5d3140ca9186f564c0a6be8124b7941006eb574588b83d
+
+Here we have a witness section consisting of 3 elements: script parameters (02 and 03 pushed on the stack) followed by the script itself (935587).
+Translated that means `OP_ADD OP_5 OP_EQUAL`.  Since 02 03 OP_ADD is equal to 5 the script evaluates to true and the UTXO can be spent.
+Note that this is a simplistic example and that the script does not require a signature to be spent.
+(*Interesting to note that 02 and 03 are pushed, yet the script contains '55' (OP_5) rather than 05.*)
+
+A more typical script would be a multisig or a timelock.
+
+
+
+
+
+
+
+
+
+
+
+
+
 [TODO] If your transaction spends both legacy and segwit UTXOs together, it will also have to be a segwit transaction. [JMC << need to research this more.]
 
-[TODO] P2WSH
+
+
+
 
 
 
@@ -139,20 +196,21 @@ In other words what bitcoin core does is build the preimage again, and runs a 's
 ----
 References: 
 
-1. official BIP: 
+1. official BIP
 https://github.com/bitcoin/bips/blob/master/bip-0141.mediawiki
 https://github.com/bitcoin/bips/blob/master/bip-0143.mediawiki
 
-2. example of same transaction, but different TxId:
+2. example of same transaction, but different TxId
 https://bitcoin.stackexchange.com/questions/39363/compute-txid-of-bitcoin-transaction?rq=1
 
-3. explanation of TxId calculation for Segwit:
+3. explanation of TxId calculation for Segwit
 https://bitcoin.stackexchange.com/questions/62044/how-to-compute-segwit-txid
 
-4. explanation of how Segwit solves the malleability problem (scriptSig malleability):
+4. explanation of how Segwit solves the malleability problem (scriptSig malleability)
 https://bitcoincore.org/en/2016/01/26/segwit-benefits/
 
-5. bitcoins the hard way:
+5. bitcoins the hard way
 http://www.righto.com/2014/02/bitcoins-hard-way-using-raw-bitcoin.html
 
-
+6. bitcoin script
+https://en.bitcoin.it/wiki/Script
