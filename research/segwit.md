@@ -168,18 +168,33 @@ Translated that means `OP_ADD OP_5 OP_EQUAL`.  Since 02 03 OP_ADD is equal to 5 
 Note that this is a simplistic example and that the script does not require a signature to be spent.
 (*Interesting to note that 02 and 03 are pushed, yet the script contains '55' (OP_5) rather than 05.*)
 
-A more typical script would be a multisig or a timelock.
+
+A more typical script would be a timelock:
+
+    01000000 0001
+    01
+        64f5d074c1acf2ac43b9b5eb643667a4fe607d3d8b77a350832b295cfb009c1b 00000000
+        00
+        feffffff
+    01
+        2823000000000000 1976a914a447681601eef322926c0b3de5dfbb4157bbe40988ac
+    02
+        47 304402200fec7a12951c9315761eb1f07c222932bfc277076d463f622024d2abcee2334a022003c778a71d97b83210447bdae959a97571e6ce3f4879dec482479f81883262ef01
+        29 03c16b19b1752103a51cec1cfe9844c9c3e9b536bea8edb22c1fef0af1b55b19dc197170a9e58567ac
+    c16b1900
+    txId=4c03839280eab742330d8cfa814c1ce58682a3362b36e8eaedeb2ba1ec2827e4
+
+Here the witness contains two elements: the signature and the script (the signature is a parameter input to the script).
+The script translates to: `PUSH_3 196bc1 OP_CLTV OP_NULL PUSH_33 [public key] OP_CHECKSIG`
+What this means is if the LockTime field is 196bc1 and the block height is >= 196bc1 check the signature matches the public key.  
+Thus the UTXO cannot be spent until block 196bc1 has been reached.
 
 
 
 
 
 
-
-
-
-
-
+### TODO
 
 
 [TODO] If your transaction spends both legacy and segwit UTXOs together, it will also have to be a segwit transaction. [JMC << need to research this more.]
