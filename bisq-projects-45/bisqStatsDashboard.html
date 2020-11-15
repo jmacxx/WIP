@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+	<head>
+		<title>STATS DASHBOARD</title>
+        <style type="text/css">
+            html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video
+            {margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}
+            article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}
+            body{line-height:1}
+            ol,ul{list-style:none}
+            blockquote,q{quotes:none}
+            blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}
+            table{border-collapse:collapse;border-spacing:0}
+            body{background-color:#000;color:#fff;width:100%;height:100%;font-family:"Muli",-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-weight:300;font-size:12px;line-height:1em}
+            a{color:#777;text-decoration:none}
+            a:hover{color:#fff}
+            code,samp{font-family:Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+            body{width:100%;height:100%}
+            header,article,footer{position:absolute;left:0;right:0}
+            header{box-sizing:border-box;top:0;height:68px;border-bottom:1px solid #b40000;background-color:#191919;overflow:hidden;display:flex;align-items:center}
+            article{top:69px;bottom:25px}
+            footer{bottom:0;height:24px;border-top:1px solid #b40000;line-height:24px;background-color:#191919;overflow:hidden;text-align:right}
+            footer p{display:inline-block;border-left:1px solid #353230;padding:0 12px}
+            footer p.status{padding:0}
+            header .logo,header h1,header aside,header nav,header nav ul,header nav ul li,header .v-line{display:inline-block;font-size:20px;line-height:20px}
+            header .logo{font-size:20px;padding-left:0.5em}
+            header a.active{color:#fff}
+            @media (max-width: 425px){header .logo span{display:none}}
+            header .v-line{width:1px;height:100%;margin:0 10px 0 12px;background-color:#666}
+            header nav ul li{padding-right:10px}
+            header nav ul li a{color:#776}
+            header nav ul li a.active{color:#fff}
+            header nav ul li a.alert{background-color:#A00} #JMC
+            @media (max-width: 512px){header aside span{display:none}}
+            article,footer{font-family:Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+            article{padding:6.5px;column-width:350px;column-gap:6.5px;column-fill:auto;overflow-x:auto;font-size:12px}
+            @media screen and (max-width: 619.5px){article{column-width:auto;overflow-y:auto}}
+            .module{box-sizing:border-box;break-inside:avoid;page-break-inside:avoid;border:1px solid #4e0000;margin-bottom:6.5px}
+            .module .module-header{line-height:19px;padding:0 6.5px;cursor:default;font-weight:600}
+            .module .row{line-height:19px;padding:0 6.5px;border-bottom:1px solid #222}
+            .module .row:last-child{border-bottom:none}
+            .module .row .cells{display:flex;flex-direction:row;justify-content:space-between;cursor:pointer}
+            .module .row .cells .cell{color:#eee;display:inline-block;cursor:pointer}
+            .module .row .cells .cell.label{color:#999}
+            .module .row .cells .cell .price.alert{background-color:#A00} #JMC
+            .module .row .cells .cell.link a{display:block}
+            .module .row .cells .cell.link a:hover{color:#70b400}
+            .hidden{display:none}
+        </style>
+	</head>
+
+    <body>
+        <header>
+          <div id="mainMenu" class="logo">Bisq <a class="menuItem" href="javascript:;" onClick="viewAggregateData();">Seednode Status</a></div>
+          <div class="v-line"></div>
+          <nav id="subMenu">
+            <ul></ul>
+          </nav>
+          <div class="v-line"></div>
+          <nav>
+            <ul><button  onclick='refresh();'>Refresh</button></ul>
+          </nav>
+        </header>  
+        <div id="workspace">
+            <article id="DashboardTemplate">
+                <div id="acc_rows_template">
+	                <div class="module">
+                    	<div class="module-header"><h2>template</h2></div>
+                    	<div class="row">
+                       	</div>
+                    </div>
+            </article>
+            <article id="Dashboard0"> <!-- the overview -->
+                <h1>Aggregated data:</h1><br/>
+                <div id="acc_rows0"></div>
+            </article>
+        </div>
+        <div id='loadedJson' hidden></div>
+        <footer><div id='dataSourceInfo'></div></footer>
+    </body>
+
+
+<script type="text/javascript">
+
+    window.readyHandlers = [];
+    window.ready = function ready(handler) {
+        window.readyHandlers.push(handler);
+        handleState();
+    };
+
+    window.handleState = function handleState () {
+        if (['interactive', 'complete'].indexOf(document.readyState) > -1) {
+            while(window.readyHandlers.length > 0) {
+                (window.readyHandlers.shift())();
+            }
+        }
+    };
+
+    document.onreadystatechange = window.handleState;
+
+    ready(function () {
+    
+	    function addArticle(dashboardNumber) {
+            var clone = document.createElement("article");
+            clone.innerHTML = "<div id='acc_rows"+dashboardNumber+"'></div>";
+            clone.setAttribute("id",'Dashboard'+dashboardNumber);
+		    document.getElementById("workspace").append(clone);
+        }
+
+        function addModules(numModules) {
+            var modules = getModules();
+            // load views for each of the dbs
+            for (var dashboardNumber=0; dashboardNumber<numModules; dashboardNumber++) {
+                for (var i=0; i<modules.length; i++) {
+                    addModule(modules[i], dashboardNumber);
+                }
+            }
+        }
+
+	    function addModule(CR, dashboardNumber) {
+		    var newModule = document.getElementById("acc_rows_template").children[0].cloneNode(true);
+            var doc = document.getElementById("acc_rows"+dashboardNumber);
+            doc.appendChild(newModule);
+		    newModule.children[0].innerText=CR.groupName;
+            for (var j=0; j<CR.infoList.length; j++) { 
+                var newRow = moduleRowAdd(CR.infoList[j].tag, dashboardNumber);
+	            newRow.childNodes[0].children[0].innerText=CR.infoList[j].label;
+	            newRow.childNodes[0].children[1].innerText="TBD";
+            }
+        }
+
+	    function moduleRowAdd(tag, dashboardNumber) {
+            var clone = document.createElement("div");
+            clone.innerHTML = "<div class='cells'><div class='cell label'>label</div><div id='" +tag+dashboardNumber+ "' class='cell price'>value</div></div>";
+            clone.setAttribute("class",'row');
+            var spot = document.getElementById("acc_rows"+dashboardNumber);
+            spot.children[spot.children.length-1].append(clone);
+            return clone;
+	    }
+
+        document.getElementById('DashboardTemplate').classList.add('hidden');
+        // create the menu items
+        loadJsonData();
+        var spot = document.getElementById('subMenu').children[0];
+        var seedNodeList = getSeedNodeList();
+        var dashboardNumber = 1;
+        for (seedNode of seedNodeList) {
+            addArticle(dashboardNumber);
+            var clone = document.createElement("li");
+            clone.innerHTML = '<a class="menuItem" id="seednode'+dashboardNumber.toFixed(0)+'" href="javascript:;" onclick="viewSeedNode(this.id);">'+seedNode+'</a>';
+    		spot.append(clone);
+    		dashboardNumber++;
+        }
+        var numDashboards = seedNodeList.length+1
+	    addModules(numDashboards);
+	    viewAggregateData();
+        for (var dashboardNumber=0; dashboardNumber<numDashboards; dashboardNumber++) {
+            updateDisplayedData(dashboardNumber.toString());
+        }
+    });
+
+    function refresh() {
+        debugger;
+        loadJsonData();
+	    viewAggregateData();
+        //var x = $('#daoStateChainHeight0');
+        //x[0].style.backgroundColor="red";
+        //x.addClass('info');
+    }
+
+    // menu choice
+    function viewAggregateData() {
+   	    for (x of document.getElementById("subMenu").getElementsByClassName("menuItem")) { x.classList.remove('active'); }
+   	    for (x of document.getElementById("mainMenu").getElementsByClassName("menuItem")) { x.classList.add('active'); }
+        document.getElementById('Dashboard0').classList.remove('hidden');
+        for (var dashboardNumber=1; dashboardNumber<=getSeedNodeList().length; dashboardNumber++) {
+            document.getElementById('Dashboard'+dashboardNumber).classList.add('hidden');
+        }
+	}
+
+    // menu choice
+	function viewSeedNode(selectedId) {
+	    // determine which seednode needs to be shown
+   	    var selectedDashboard = selectedId.replace(/^seednode/g, '');
+   	    for (x of document.getElementById("mainMenu").getElementsByClassName("menuItem")) { x.classList.remove('active'); }
+   	    for (x of document.getElementById("subMenu").getElementsByClassName("menuItem")) { x.classList.remove('active'); }
+        document.getElementById(selectedId).classList.add('active');
+        updateDisplayedData(selectedDashboard);
+        for (var dashboardNumber=0; dashboardNumber<=getSeedNodeList().length; dashboardNumber++) {
+            document.getElementById('Dashboard'+dashboardNumber).classList.add('hidden');
+        }
+        document.getElementById('Dashboard'+selectedDashboard).classList.remove('hidden');
+	}
+
+    function hashDisplay(hash) {
+        if (typeof(hash) == "string" && hash.length > 15) {
+            var l = hash.length;
+            var y = hash.substring(0,8) + "..." + hash.substring(l-8,l);
+            return y;
+            }
+        return hash;
+    }
+
+    function setModuleData(module, viewPostfix, data) {
+        // look up each HTML element by ID using the tag stored in CRx
+        // set the value (innerText) to aggregatedData[tag]
+        var numAlerts = data["numAlerts"];
+        if (numAlerts == null) { numAlerts = 0; }
+        for (i=0; i<module.infoList.length; i++) {
+            var elementId = module.infoList[i].tag;
+            var element = document.getElementById(elementId + viewPostfix);
+            
+            if (element != null) {
+                var fieldInfo = {};
+                if (elementId == "numAllConnectionsLostEvents") {
+                    debugger;
+                }
+                if (data["dataMap"] && data.dataMap[elementId]) { fieldInfo = data.dataMap[elementId]; }
+                else { fieldInfo.value = data[elementId]; }
+                element.innerText = fieldInfo.value;
+                // highlight all alerting fields
+                if (fieldInfo.persistentWarning && fieldInfo.persistentWarning == true) {
+                    element.style.color="black";
+                    element.style.backgroundColor="yellow";
+                }
+                else if (fieldInfo.persistentAlert && fieldInfo.persistentAlert == true) { //deviationSeverity == "ALERT") {
+                    numAlerts++;
+                    element.style.color="white";
+                    element.style.backgroundColor="red";
+                }
+            }
+        }
+        data["numAlerts"] = numAlerts;
+    }
+
+    function updateDisplayedData(viewPostfix) {
+        var dbs = aggregateData();
+        var data = dbs["aggregated"];
+        if (Number(viewPostfix) > 0) {
+            // grab the data from an individual seednode
+            var dashboardNumber = 0;
+            for (db in dbs) {
+                dashboardNumber++;
+                if (dashboardNumber.toString() == viewPostfix) {
+                    data = dbs[db];
+                }
+            }
+        }
+        var modules = getModules();
+        for (var i=0; i<modules.length; i++) {
+            setModuleData(modules[i], viewPostfix, data);
+        }
+        if (Number(viewPostfix) > 0) {
+            // if there are any alerts, the highlight the seednode name in topmost menu
+            var seedName = "seednode"+viewPostfix;
+            if (data.numAlerts > 0) { document.getElementById(seedName).classList.add('alert');} 
+            else { document.getElementById(seedName).classList.remove('alert'); }
+        }
+
+    }
+
+    function loadJsonData() {
+        //var url = "http://lvh.me:8082/seednode_json";
+        var url = "http://46.101.179.224:8082/seednode_json";
+        document.getElementById("dataSourceInfo").innerText = "Data Source: " + url;
+        var jsonFromService = httpGet(url);
+        var dbs = JSON.parse(jsonFromService);
+        for (dbName in dbs) {
+            // extra information to display:
+            var now = new Date();
+            var timeNow = now.getTime();
+            var dbx = dbs[dbName];
+            if (dbx.hasOwnProperty("errorMessage")) {
+                delete dbs[dbName];
+                continue;
+            }
+            dbx["seedNodes"] = dbName;
+            dbx["jvmUpTime"] = timeNow - Number(dbx["dataMap"]["jvmStartTime"].value);
+            dbx["roundtripTime"] = Number(dbx["responseTime"]) - Number(dbx["requestStartTime"]);
+        }
+        document.getElementById("loadedJson").innerText = JSON.stringify(dbs);
+    }
+
+    function getSeedNodeList() {
+        var x = document.getElementById("loadedJson").innerText;
+
+        if (x.length < 100) { alert("JSON data not loaded"); }
+        var dbs = JSON.parse(x);
+        var retVal = [];
+        for (dbName in dbs) {
+            retVal.push(dbName);
+        }
+        return retVal;
+    }
+
+
+    
+    function cleanupJsonData(dbs) {
+
+        function cleanupMb(xx) {
+            xx.value = (Number(xx.value)/1000000).toFixed(0) + " Mb";
+        }
+        function cleanupHash(xx) {
+            xx.value = hashDisplay(xx.value);
+        }
+        function cleanupDate(xx) {
+            xx.value = dateToStr(xx.value);
+        }
+        function cleanupNumber(xx, decimals) {
+            xx.value = Number(xx.value).toFixed(decimals);
+        }
+
+        // clean up some data values (make human-readable)
+        // this is done AFTER the aggregated view is calculated
+        for (dbName in dbs) {
+            var db = dbs[dbName];
+            var dataMap = db.dataMap;
+            db["requestStartTime"] = dateToStr(db["requestStartTime"]);
+            db["jvmUpTime"] = timeToStr(Number(db["jvmUpTime"]));
+            db["roundtripTime"] = timeToStr(Number(db["roundtripTime"]));
+            
+            cleanupDate(dataMap["jvmStartTime"]);
+
+            cleanupHash(dataMap["daoStateHash"]);
+            cleanupHash(dataMap["blindVoteHash"]);
+            cleanupHash(dataMap["proposalHash"]);
+
+            cleanupMb(dataMap["usedMemory"]);
+            cleanupMb(dataMap["receivedBytes"]);
+            cleanupMb(dataMap["sentBytes"]);
+
+            cleanupNumber(dataMap["sentMessagesPerSec"], 2);
+            cleanupNumber(dataMap["receivedMessagesPerSec"], 2);
+            cleanupNumber(dataMap["sentBytesPerSec"], 0);
+            cleanupNumber(dataMap["receivedBytesPerSec"], 0);
+        }
+        return dbs;
+    }
+
+    function aggregateData() {
+    
+        function aggregateUpTime(tag, dbs, destStruct) {
+            var vals = [];
+            var total = 0;
+            for (x in dbs) {
+                var db = dbs[x];
+                vals.push(db[tag]);
+                if (Number(db[tag]) > 99*60*60*1000) {
+                    pushError(destStruct, "jvmUpTime");
+                }
+                total = total + Number(db[tag]);
+            }
+            var dx = total/vals.length;
+            destStruct[tag] = dx;
+        }
+
+        function aggregateTimestamp(tag, dbs, destStruct) {
+            var vals = [];
+                var total = 0;
+            for (x in dbs) {
+                var db = dbs[x];
+                vals.push(db[tag]);
+                total = total + Number(db[tag]);
+            }
+            var dx = total/vals.length;
+            destStruct[tag] = dx;
+        }
+
+        function aggregateTimestamp2(tag, dbs, destStruct) {
+            var vals = [];
+            var total = 0;
+            for (x in dbs) {
+                var db = dbs[x];
+                var val = Number(db.dataMap[tag].value);
+                vals.push(val);
+                total = total + val;
+            }
+            var dx = total/vals.length;
+            destStruct[tag] = { value: dx };
+        }
+        
+        // we expect the hash value to match across all instances otherwise alert
+        function aggregateHash(tag, dbs, destStruct) {
+            destStruct[tag] = "";
+            var vals = [];
+            var dbToHash = {};
+            for (dbName in dbs) {
+                var db = dbs[dbName];
+                var val = db.dataMap[tag].value;
+                vals.push(val);
+                dbToHash[dbName] = val;
+            }
+            if (isUniform(vals)) {
+                destStruct[tag] = { value: hashDisplay(vals[0]) };
+                return;
+            }
+            // they do not all agree, blank out the aggregated hash
+            destStruct[tag] = { value: hashDisplay("[NO CONSENSUS]") };
+        }
+
+        function aggregateGB(tag, dbs, stripTrailing, destStruct) {
+            var vals = [];
+            var total = 0;
+            for (x in dbs) {
+                var db = dbs[x];
+                var val = db["inventory"][tag];
+                if (stripTrailing != null) {
+                    val = val.replace(new RegExp(stripTrailing, "gi"), '');
+                }
+                vals.push(val);
+                total = total + Number(val);
+            }
+            var z = total/vals.length;
+            var zz = z.toFixed(2);
+            if (zz.match(/\.00$/gi)) { zz = zz.replace(/\.00/gi, ''); }
+            if (stripTrailing != null) { zz = zz + stripTrailing; }
+            destStruct[tag] = zz;
+        }
+
+        function aggregateNumber(tag, dbs, destStruct) {
+            var vals = [];
+            var total = 0;
+            for (x in dbs) {
+                var db = dbs[x];
+                var val = Number(db.dataMap[tag].value);
+                vals.push(val);
+                total = total + Number(val);
+            }
+            var z = total/vals.length;
+            var zz = z.toFixed(0);
+            if (zz.match(/\.00$/gi)) { zz = zz.replace(/\.00/gi, ''); }
+            destStruct[tag] = { value: zz };
+        }
+
+        function aggregateNumber2(tag, dbs, destStruct) {
+            var vals = [];
+            var total = 0;
+            for (x in dbs) {
+                var db = dbs[x];
+                var val = Number(db[tag]);
+                vals.push(val);
+                total = total + Number(val);
+            }
+            var z = total/vals.length;
+            var zz = z.toFixed(0);
+            if (zz.match(/\.00$/gi)) { zz = zz.replace(/\.00/gi, ''); }
+            destStruct[tag] = zz;
+        }
+
+        var aggregatedData = { 
+            dataMap : {}
+        };
+
+        var x = document.getElementById("loadedJson").innerText;
+        if (x.length < 100) { alert("JSON data not loaded"); }
+        var dbs = JSON.parse(x);
+        
+        var dataMap = aggregatedData.dataMap;
+
+        aggregateTimestamp("requestStartTime", dbs, aggregatedData);    // non-inventory
+        aggregateNumber2("roundtripTime", dbs, aggregatedData);         // non-inventory
+        aggregateNumber2("jvmUpTime", dbs, aggregatedData);              // non-inventory
+        
+        aggregateTimestamp2("jvmStartTime", dbs, dataMap);
+        aggregateHash("blindVoteHash", dbs, dataMap);
+        aggregateHash("proposalHash", dbs, dataMap);
+        aggregateHash("daoStateHash", dbs, dataMap);
+        aggregateHash("version", dbs, dataMap);
+        aggregateNumber("usedMemory", dbs, dataMap);
+        aggregateNumber("SignedWitness", dbs, dataMap);
+        aggregateNumber("OfferPayload", dbs, dataMap);
+        aggregateNumber("MailboxStoragePayload", dbs, dataMap); 
+        aggregateNumber("Alert", dbs, dataMap);
+        aggregateNumber("Filter", dbs, dataMap);
+        aggregateNumber("Mediator", dbs, dataMap);
+        aggregateNumber("RefundAgent", dbs, dataMap);
+        aggregateNumber("AccountAgeWitness", dbs, dataMap);
+        aggregateNumber("BlindVotePayload", dbs, dataMap);
+        aggregateNumber("ProposalPayload", dbs, dataMap);
+        aggregateNumber("TradeStatistics3", dbs, dataMap);
+        aggregateNumber("numBsqBlocks", dbs, dataMap);
+        aggregateNumber("daoStateChainHeight", dbs, dataMap);
+        aggregateNumber("TempProposalPayload", dbs, dataMap);
+        aggregateNumber("numConnections", dbs, dataMap);
+        aggregateNumber("maxConnections", dbs, dataMap);
+        aggregateNumber("peakNumConnections", dbs, dataMap);
+        aggregateNumber("numAllConnectionsLostEvents", dbs, dataMap);
+        aggregateNumber("sentBytes", dbs, dataMap);
+        aggregateNumber("receivedBytes", dbs, dataMap);
+        aggregateNumber("sentBytesPerSec", dbs, dataMap);
+        aggregateNumber("receivedBytesPerSec", dbs, dataMap);
+        aggregateNumber("sentMessagesPerSec", dbs, dataMap);
+        aggregateNumber("receivedMessagesPerSec", dbs, dataMap);
+
+        let countSeedNodes = 0;
+        for (i in dbs) { countSeedNodes++; }
+        aggregatedData.seedNodes = countSeedNodes;
+        dbs["aggregated"] = aggregatedData;
+        cleanupJsonData(dbs);
+        return dbs;
+    }
+
+    function pushError(db, tag) {
+        if (db["errors"] == null) {
+            db["errors"] = new Array();
+        }
+        db["errors"].push(tag);
+    }
+        
+    function pushWarning(db, tag) {
+        if (db["warnings"] == null) {
+            db["warnings"] = new Array();
+        }
+        db["warnings"].push(tag);
+    }
+        
+    function pushInfo(db, tag) {
+        if (db["infos"] == null) {
+            db["infos"] = new Array();
+        }
+        db["infos"].push(tag);
+    }
+        
+    function getModules() {
+        // associate variable names with human readable labels & also group them into 5 modules    
+        var M1 = { groupName: "Seed node info", infoList: [
+            {label:"Seed nodes", tag: "seedNodes"},
+            {label:"Memory used", tag: "usedMemory"},
+            {label:"JVM start time", tag: "jvmStartTime"},
+            {label:"JVM up time", tag: "jvmUpTime"},
+            {label:"Version", tag: "version"},
+        ]};
+            
+        var M2 = { groupName: "Request info", infoList: [
+            {label:"Requested at", tag: "requestStartTime"},
+            {label:"Roundtrip time", tag: "roundtripTime"},
+        ]};
+            
+        var M3 = { groupName: "Data inventory", infoList: [
+            {label:"Number of OfferPayload", tag: "OfferPayload"},
+            {label:"Number of MailboxStoragePayload", tag: "MailboxStoragePayload"},
+            {label:"Number of TradeStatistics", tag: "TradeStatistics3"},
+            {label:"Number of Alerts", tag: "Alert"},
+            {label:"Number of Filters", tag: "Filter"},
+            {label:"Number of Mediators", tag: "Mediator"},
+            {label:"Number of RefundAgents", tag: "RefundAgent"},
+            {label:"Number of AccountAgeWitness", tag: "AccountAgeWitness"},
+            {label:"Number of SignedWitness", tag: "SignedWitness"},
+        ]};
+            
+        var M4 = { groupName: "DAO data", infoList: [
+            {label:"Number of BSQ blocks", tag: "numBsqBlocks"},
+            {label:"Number of TempProposalPayload", tag: "TempProposalPayload"},
+            {label:"Number of ProposalPayload", tag: "ProposalPayload"},
+            {label:"Number of BlindVotePayload", tag: "BlindVotePayload"},
+            {label:"DAO state block height", tag: "daoStateChainHeight"},
+            {label:"DAO state hash", tag: "daoStateHash"},
+            {label:"Propoal state hash", tag: "proposalHash"},
+            {label:"Blind vote state hash", tag: "blindVoteHash"},
+        ]};
+            
+        var M5 = { groupName: "Network Info", infoList: [
+            {label:"Number of connections", tag: "numConnections"},
+            {label:"Max connections", tag: "maxConnections"},
+            {label:"Peak connections", tag: "peakNumConnections"},
+            {label:"All connections lost", tag: "numAllConnectionsLostEvents"},
+            {label:"Sent data", tag: "sentBytes"},
+            {label:"Received data", tag: "receivedBytes"},
+            {label:"Sent bytes/sec", tag: "sentBytesPerSec"},
+            {label:"Received bytes/sec", tag: "receivedBytesPerSec"},
+            {label:"Received messages/sec", tag: "receivedMessagesPerSec"},
+            {label:"Sent messages/sec", tag: "sentMessagesPerSec"},
+        ]};
+
+        var modules = [];
+        modules.push(M1);
+        modules.push(M2);
+        modules.push(M3);
+        modules.push(M4);
+        modules.push(M5);
+        return modules;
+    }
+    
+    // ======================= UTILS =======================
+    
+    function padStr(i) {
+        return (i < 10) ? "0" + i : "" + i;
+    }
+    function padStr2(i) {
+        var retVal = i.toFixed(0);
+        while (retVal.length < 3) { retVal = "0" + retVal; }
+        return retVal;
+    }
+
+    const isUniform = (vals) => {
+        const base = vals[0];
+        return vals.every(element => element === base);
+    }
+
+    const median = arr => {
+        const mid = Math.floor(arr.length / 2);
+        const nums = [...arr].sort((a, b) => a - b);
+        return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+    };
+
+    const stringFrequency = arr => {
+        const counts = new Map();
+        arr.forEach((el) => {
+            counts.set(el, counts.has(el) ? (counts.get(el) + 1) : 1);
+        });
+        return counts;
+    };
+
+    function dateToStr(unixTimestamp) {
+        if (typeof(unixTimestamp) == "string") { unixTimestamp = Number(unixTimestamp); }
+        var temp = new Date(unixTimestamp);
+        var dateStr = padStr(temp.getUTCFullYear()) + "-" +
+                      padStr(1 + temp.getUTCMonth()) + "-" +
+                      padStr(temp.getUTCDate()) + " " +
+                      padStr(temp.getUTCHours()) + ":" +
+                      padStr(temp.getUTCMinutes()) + ":" +
+                      padStr(temp.getUTCSeconds());
+        return dateStr;
+    }
+    
+    function timeToStr(timeDiff) {
+        var hh = Math.floor(timeDiff / 1000 / 60 / 60);   
+        timeDiff -= hh * 1000 * 60 * 60;
+        var mm = Math.floor(timeDiff / 1000 / 60);
+        timeDiff -= mm * 1000 * 60;
+        var ss = Math.floor(timeDiff / 1000);
+        timeDiff -= ss * 1000;
+        var ms = Math.floor(timeDiff);
+        var timeStr = padStr(hh) + ":" +
+                      padStr(mm) + ":" +
+                      padStr(ss);
+        if (hh == 0 && mm == 0) {
+            timeStr = ss + "." + padStr2(ms) + " sec";
+        }                      
+        return timeStr;
+    }
+    
+    function httpGet(theUrl) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+        xmlHttp.send( null );
+        return xmlHttp.responseText;
+    }
+
+
+</script>
+
+</html>
