@@ -141,9 +141,6 @@ class AlertManager():
         epochTimestamp = self.toEpochTime(javaTimestamp)
         if alertingField not in knownAlerts:
             knownAlerts[alertingField] = { "value": alertingValue, "startTimestamp": epochTimestamp, "sentToKeybase": 0 }
-            now = datetime.datetime.fromtimestamp(epochTimestamp)
-            timestr = now.strftime("%H:%M:%S")
-            print(f'alert started: {seednode}/{alertingField} @ {timestr}')
         notifyKeybase = True if knownAlerts[alertingField]["sentToKeybase"] == 0 else False
         # special consideration for offline alert.  We don't receive any indication from Java about
         # the "persistentAlert" status.  So as a crude workaround we only alert keybase if this
@@ -155,7 +152,9 @@ class AlertManager():
                 notifyKeybase = False
         if notifyKeybase:
             knownAlerts[alertingField]["sentToKeybase"] += 1
-            print(f'sending alert {seednode}/{alertingField} to keybase')
+            now = datetime.datetime.fromtimestamp(epochTimestamp)
+            timestr = now.strftime("%H:%M:%S")
+            print(f'alert started: {seednode}/{alertingField} @ {timestr}')
             os.system(f'keybase chat send {KEYBASE_RECIPIENTS} "🆘 alert started: {seednode} => {alertingField}={alertingValue} @ {timestr}"')
 
     def notifyAlertStopped(self, seednode, alertingField, value):
