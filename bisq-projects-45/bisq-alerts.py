@@ -121,8 +121,8 @@ class AlertManager():
                 self.notifyAlertStarted(seednode, knownAlerts, "OFFLINE", j["errorMessage"], j["requestStartTime"])
             else:
                 if "OFFLINE" in knownAlerts:
+                    self.notifyAlertStopped(seednode, knownAlerts, "OFFLINE", "n/a")
                     knownAlerts.pop("OFFLINE")
-                    self.notifyAlertStopped(seednode, "OFFLINE", "n/a")
                 for key, val in j["dataMap"].items():
                     if val["persistentAlert"] == True:
                         print(f'active alert: {key}')
@@ -130,38 +130,38 @@ class AlertManager():
                     else:
                         # non-alerting key, see whether it can kill an existing alert
                         if key in knownAlerts:
+                            self.notifyAlertStopped(seednode, knownAlerts, key, val["value"])
                             knownAlerts.pop(key)
-                            self.notifyAlertStopped(seednode, key, val["value"])
             self.nodeAlerts[seednode] = knownAlerts
             print(f'{len(knownAlerts)} alerts for {seednode}')
             retVal += 1
         return retVal
 
     def notifyAlertStarted(self, seednode, knownAlerts, alertingField, alertingValue, javaTimestamp):
-        epochTimestamp = self.toEpochTime(javaTimestamp)
         if alertingField not in knownAlerts:
-            knownAlerts[alertingField] = { "value": alertingValue, "startTimestamp": epochTimestamp, "sentToKeybase": 0 }
+            knownAlerts[alertingField] = { "value": alertingValue, "startTimestamp": self.toEpochTime(javaTimestamp), "sentToKeybase": 0 }
         notifyKeybase = True if knownAlerts[alertingField]["sentToKeybase"] == 0 else False
         # special consideration for offline alert.  We don't receive any indication from Java about
         # the "persistentAlert" status.  So as a crude workaround we only alert keybase if this
-        # alert age is > 10 minutes
+        # alert age is > 20 minutes
         if alertingField == "OFFLINE":
-            alertAge = epochTimestamp - knownAlerts[alertingField]["startTimestamp"]
-            if (alertAge / 60 < 10):
-                print(f'received OFFLINE alert age={alertAge}, but lets wait until it is 10 minutes old before notifying')
+            alertAge = datetime.datetime.now().timestamp() - knownAlerts[alertingField]["startTimestamp"]
+            if (alertAge / 60 < 20):
+                print(f'received OFFLINE alert age={alertAge/60} minutes, but lets wait until it is 20 minutes old before notifying')
                 notifyKeybase = False
         if notifyKeybase:
             knownAlerts[alertingField]["sentToKeybase"] += 1
-            now = datetime.datetime.fromtimestamp(epochTimestamp)
-            timestr = now.strftime("%H:%M:%S")
+            alertStarted = datetime.datetime.fromtimestamp(knownAlerts[alertingField]["startTimestamp"])
+            timestr = alertStarted.strftime("%H:%M:%S")
             print(f'alert started: {seednode}/{alertingField} @ {timestr}')
             os.system(f'keybase chat send {KEYBASE_RECIPIENTS} "🆘 alert started: {seednode} => {alertingField}={alertingValue} @ {timestr}"')
 
-    def notifyAlertStopped(self, seednode, alertingField, value):
-        now = datetime.datetime.now()
-        timestr = now.strftime("%H:%M:%S")
-        print(f'alert stopped: {seednode}/{alertingField}')
-        os.system(f'keybase chat send {KEYBASE_RECIPIENTS} "🆗 alert ended: {seednode} => {alertingField}={value} @ {timestr}"')
+    def notifyAlertStopped(self, seednode, knownAlerts, alertingField, value):
+        if knownAlerts[alertingField]["sentToKeybase"] > 0:
+            now = datetime.datetime.now()
+            timestr = now.strftime("%H:%M:%S")
+            print(f'alert stopped: {seednode}/{alertingField}')
+            os.system(f'keybase chat send {KEYBASE_RECIPIENTS} "🆗 alert ended: {seednode} => {alertingField}={value} @ {timestr}"')
 
     def toEpochTime(self, timestamp):
         # removes milliseconds from Java timestamp

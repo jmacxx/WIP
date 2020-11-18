@@ -57,6 +57,8 @@
     StandardOutput=syslog
     StandardError=syslog
     SyslogIdentifier=bisq-monitor-app
+    Restart=always
+    RuntimeMaxSec=6000
     [Install]
     WantedBy=default.target
     EOF
