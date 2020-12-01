@@ -1,0 +1,216 @@
+#################################################################
+Connected to node: localhost:2002
+Received 395 instances from a GetUpdatedDataRequest
+TradeStatistics2: 395
+################################################################# 
+Dec-01 11:42:40.096 [JavaFX Application Thread] INFO  b.n.p2p.storage.P2PDataStorage: Processing 0 protectedStorageEntries took 0 ms. 
+Dec-01 11:42:40.096 [JavaFX Application Thread] INFO  b.n.p2p.storage.P2PDataStorage: Processing 395 persistableNetworkPayloads took 0 ms. 
+Dec-01 11:42:40.096 [JavaFX Application Thread] INFO  b.n.p.p.g.RequestDataHandler: Processing GetDataResponse took 1 ms 
+Dec-01 11:43:01.558 [JavaFX Application Thread] INFO  b.c.p.PersistenceManager: Serializing SequenceNumberMap took 0 msec 
+Dec-01 11:43:01.607 [Write-SequenceNumberMap_to-disk] INFO  b.c.p.PersistenceManager: Writing the serialized SequenceNumberMap completed in 49 msec 
+Dec-01 11:43:02.564 [JavaFX Application Thread] INFO  b.d.m.o.t.TakeOfferDataModel: Start requestTxFee: txFeeFromFeeService=23744 
+Dec-01 11:43:02.607 [JavaFX Application Thread] INFO  b.common.taskrunner.TaskRunner: Run task: SendOfferAvailabilityRequest 
+Dec-01 11:43:02.608 [JavaFX Application Thread] INFO  b.c.o.a.t.SendOfferAvailabilityRequest: Send OfferAvailabilityRequest with offerId 8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 and uid 8cd6aff4-b036-4c86-ac8c-10057e0f35c3 to peer localhost:6666 
+Dec-01 11:43:02.731 [JavaFX Application Thread] INFO  b.d.m.o.t.TakeOfferDataModel: Completed requestTxFee: txFeeFromFeeService=23744 
+Dec-01 11:43:02.731 [JavaFX Application Thread] INFO  b.c.o.a.t.SendOfferAvailabilityRequest: OfferAvailabilityRequest arrived at peer: offerId=8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150; uid=8cd6aff4-b036-4c86-ac8c-10057e0f35c3 
+Dec-01 11:43:02.746 [JavaFX Application Thread] INFO  b.c.o.a.OfferAvailabilityProtocol: Received handleOfferAvailabilityResponse from localhost:6666 with offerId 8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 and uid 37ac0d1f-385e-4db7-a644-1d8eedcbff08 
+Dec-01 11:43:02.746 [JavaFX Application Thread] INFO  b.common.taskrunner.TaskRunner: Run task: ProcessOfferAvailabilityResponse 
+Dec-01 11:43:02.747 [JavaFX Application Thread] INFO  b.c.o.a.OfferAvailabilityProtocol: Send AckMessage for OfferAvailabilityResponse to peer localhost:6666 with offerId 8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 and sourceUid 37ac0d1f-385e-4db7-a644-1d8eedcbff08 
+Dec-01 11:43:02.779 [JavaFX Application Thread] INFO  b.core.offer.OpenOfferManager: Received AckMessage for OfferAvailabilityRequest with offerId 8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 and uid 8cd6aff4-b036-4c86-ac8c-10057e0f35c3 
+Dec-01 11:43:02.780 [JavaFX Application Thread] INFO  b.c.o.a.OfferAvailabilityProtocol: AckMessage for OfferAvailabilityResponse arrived at makersNodeAddress localhost:6666. offerId=8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150, sourceUid=37ac0d1f-385e-4db7-a644-1d8eedcbff08 
+Dec-01 11:43:02.780 [JavaFX Application Thread] INFO  b.c.p.PersistenceManager: Serializing AddressEntryList took 0 msec 
+Dec-01 11:43:02.817 [Write-AddressEntryList_to-disk] INFO  b.c.p.PersistenceManager: Writing the serialized AddressEntryList completed in 37 msec 
+Dec-01 11:43:02.844 [JavaFX Application Thread] INFO  b.c.p.PersistenceManager: Serializing PreferencesPayload took 0 msec 
+Dec-01 11:43:02.876 [Write-PreferencesPayload_to-disk] INFO  b.c.p.PersistenceManager: Writing the serialized PreferencesPayload completed in 32 msec 
+Dec-01 11:43:03.847 [JavaFX Application Thread] INFO  org.bitcoinj.wallet.Wallet: Completing send tx with 2 outputs totalling 0.00652488 BTC and a fee of 0.00 BTC/vkB 
+Dec-01 11:43:03.848 [JavaFX Application Thread] INFO  org.bitcoinj.wallet.Wallet:   with 0.47444773 BTC change 
+Dec-01 11:43:03.856 [JavaFX Application Thread] INFO  org.bitcoinj.wallet.Wallet:   with a fee of 0.0007747 BTC/kB, 0.000196 BTC for 253 bytes 
+Dec-01 11:43:03.856 [JavaFX Application Thread] INFO  org.bitcoinj.wallet.Wallet:   completed: Transaction{7246cb5345c8dafc82f4df0e05092949e79c289656fc1b6d7506528a7d012aaa, wtxid e6fbe7da7dd30cd6184623e42459b0c8b0c698921eed84516163bcac88d7d6b5
+weight: 685 wu, 172 virtual bytes, 253 bytes
+purpose: USER_PAYMENT
+   in   <empty>  0.48116861 BTC (48116861)
+        witness:30440220478ca0837278e9ac28f36bdb1f669a8fef447fdacad1582e398553474652bdb602206c18a4974fba4b12634f5b9b7c7b05d69808abf7a4cff211e1ab37368043d20f01 03c7d2ca00b40f29e010e8c343384ede03b83b7945dcd14ea27eac1bb72b4308ef
+        P2WPKH addr:bcrt1q2rqc5m20c24x0eymmdaztsm078rwnuj5kyltg4  outpoint:56e764cae4d1e03fc53d4d1f1a7961bfb968855bf2ce84d105028774bc484348:2
+   out  0[] PUSHDATA(20)[bbad86e07334f964aa17b8c0e1d6effc45430e94] (0014bbad86e07334f964aa17b8c0e1d6effc45430e94)  0.00005 BTC (5000)
+        P2WPKH addr:bcrt1qhwkcdcrnxnukf2shhrqwr4h0l3z5xr55zdg6g7
+   out  0[] PUSHDATA(20)[bbad86e07334f964aa17b8c0e1d6effc45430e94] (0014bbad86e07334f964aa17b8c0e1d6effc45430e94)  0.00647488 BTC (647488)
+        P2WPKH addr:bcrt1qhwkcdcrnxnukf2shhrqwr4h0l3z5xr55zdg6g7
+   out  0[] PUSHDATA(20)[bbad86e07334f964aa17b8c0e1d6effc45430e94] (0014bbad86e07334f964aa17b8c0e1d6effc45430e94)  0.47444773 BTC (47444773)
+        P2WPKH addr:bcrt1qhwkcdcrnxnukf2shhrqwr4h0l3z5xr55zdg6g7
+   fee  0.00028613 BTC/wu, 0.00113953 BTC/vkB, 0.0007747 BTC/kB  0.000196 BTC
+} 
+Dec-01 11:43:03.858 [JavaFX Application Thread] INFO  b.c.btc.TxFeeEstimationService: Fee estimation resulted in a tx vsize of 175 vbytes.
+We use an average between the taker fee tx and the deposit tx (233 vbytes) which results in 204 vbytes.
+The deposit tx has 233 vbytes, we use that as our min value. Vsize for fee calculation is 233 vbytes.
+The tx fee of 26096 Sat 
+Dec-01 11:43:04.128 [JavaFX Application Thread] INFO  b.c.p.PersistenceManager: Serializing PreferencesPayload took 0 msec 
+Dec-01 11:43:04.153 [Write-PreferencesPayload_to-disk] INFO  b.c.p.PersistenceManager: Writing the serialized PreferencesPayload completed in 25 msec 
+Dec-01 11:43:09.920 [JavaFX Application Thread] INFO  b.common.taskrunner.TaskRunner: Run task: SendOfferAvailabilityRequest 
+Dec-01 11:43:09.921 [JavaFX Application Thread] INFO  b.c.o.a.t.SendOfferAvailabilityRequest: Send OfferAvailabilityRequest with offerId 8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 and uid f4fd7e12-c736-40e8-b760-aaf181a723ac to peer localhost:6666 
+Dec-01 11:43:09.923 [JavaFX Application Thread] INFO  b.c.o.a.t.SendOfferAvailabilityRequest: OfferAvailabilityRequest arrived at peer: offerId=8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150; uid=f4fd7e12-c736-40e8-b760-aaf181a723ac 
+Dec-01 11:43:09.948 [JavaFX Application Thread] INFO  b.c.o.a.OfferAvailabilityProtocol: Received handleOfferAvailabilityResponse from localhost:6666 with offerId 8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 and uid b7ae7bbc-f13a-4afa-b354-2f4f089943c4 
+Dec-01 11:43:09.948 [JavaFX Application Thread] INFO  b.common.taskrunner.TaskRunner: Run task: ProcessOfferAvailabilityResponse 
+Dec-01 11:43:09.948 [JavaFX Application Thread] INFO  b.c.o.a.OfferAvailabilityProtocol: Send AckMessage for OfferAvailabilityResponse to peer localhost:6666 with offerId 8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 and sourceUid b7ae7bbc-f13a-4afa-b354-2f4f089943c4 
+Dec-01 11:43:09.953 [JavaFX Application Thread] INFO  b.c.n.alerts.TradeEvents: We got a new trade. id=8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 
+Dec-01 11:43:09.972 [JavaFX Application Thread] INFO  b.c.t.p.FluentProtocol$Condition: We received a TAKE_OFFER event at phase INIT and state PREPARATION, tradeId=8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 
+Dec-01 11:43:09.973 [JavaFX Application Thread] INFO  b.common.taskrunner.TaskRunner: Run task: ApplyFilter 
+Dec-01 11:43:09.974 [JavaFX Application Thread] INFO  b.common.taskrunner.TaskRunner: Run task: TakerVerifyMakerFeePayment 
+Dec-01 11:43:09.974 [JavaFX Application Thread] INFO  b.common.taskrunner.TaskRunner: Run task: CreateTakerFeeTx 
+Dec-01 11:43:09.977 [JavaFX Application Thread] INFO  o.bitcoinj.wallet.WalletFiles: Saving wallet; last seen block is height 4550, date 2020-12-01T05:14:33Z, hash 4177d2fa63cc8c2b3395f9c733ec3ae5ca3cfcd83813042bc6a67e519df28da5 
+Dec-01 11:43:10.045 [JavaFX Application Thread] INFO  o.bitcoinj.wallet.WalletFiles: Save completed in 67.74 ms 
+Dec-01 11:43:10.047 [JavaFX Application Thread] INFO  o.bitcoinj.wallet.WalletFiles: Saving wallet; last seen block is height 4550, date 2020-12-01T05:14:33Z, hash 4177d2fa63cc8c2b3395f9c733ec3ae5ca3cfcd83813042bc6a67e519df28da5 
+Dec-01 11:43:10.087 [JavaFX Application Thread] INFO  o.bitcoinj.wallet.WalletFiles: Save completed in 39.97 ms 
+Dec-01 11:43:10.088 [JavaFX Application Thread] INFO  o.bitcoinj.wallet.WalletFiles: Saving wallet; last seen block is height 4550, date 2020-12-01T05:14:33Z, hash 4177d2fa63cc8c2b3395f9c733ec3ae5ca3cfcd83813042bc6a67e519df28da5 
+Dec-01 11:43:10.120 [JavaFX Application Thread] INFO  o.bitcoinj.wallet.WalletFiles: Save completed in 32.51 ms 
+Dec-01 11:43:10.122 [JavaFX Application Thread] INFO  org.bitcoinj.wallet.Wallet: Completing send tx with 2 outputs totalling 0.00657192 BTC and a fee of 0.00 BTC/vkB 
+Dec-01 11:43:10.122 [JavaFX Application Thread] INFO  org.bitcoinj.wallet.Wallet:   with 0.47433573 BTC change 
+Dec-01 11:43:10.123 [JavaFX Application Thread] INFO  org.bitcoinj.wallet.Wallet:   with a fee of 0.00102337 BTC/kB, 0.00026096 BTC for 255 bytes 
+Dec-01 11:43:10.123 [JavaFX Application Thread] INFO  org.bitcoinj.wallet.Wallet:   completed: Transaction{356ccbef5117bfd173da943cffa1c16bef3533d2d663f43f09d56eb417329720, wtxid 7b52c68df4c29146dce04c47cd97e14368c0a8632b98d4236c715a2cf2266f9e
+weight: 690 wu, 173 virtual bytes, 255 bytes
+purpose: USER_PAYMENT
+   in   <empty>  0.48116861 BTC (48116861)
+        witness:3045022100fbcfaa37d07f378d6363360bb55e6c17d4cc5f209084eafaa995913ed29918730220590117f01e9c0a9571500a3d3554efbfcf0d8cd7d65d42729880cb506157212001 03c7d2ca00b40f29e010e8c343384ede03b83b7945dcd14ea27eac1bb72b4308ef
+        P2WPKH addr:bcrt1q2rqc5m20c24x0eymmdaztsm078rwnuj5kyltg4  outpoint:56e764cae4d1e03fc53d4d1f1a7961bfb968855bf2ce84d105028774bc484348:2
+   out  HASH160 PUSHDATA(20)[4c0e4893237f85479f489b32c8ff0faf3ee2e1c9] EQUAL (a9144c0e4893237f85479f489b32c8ff0faf3ee2e1c987)  0.00005 BTC (5000)
+        P2SH addr:2MzBNTJDjjXgViKBGnatDU3yWkJ8pJkEg9w
+   out  0[] PUSHDATA(20)[ccdd04b47ccaaf1fa1f33fe18be9bb3f36185e4f] (0014ccdd04b47ccaaf1fa1f33fe18be9bb3f36185e4f)  0.00652192 BTC (652192)
+        P2WPKH addr:bcrt1qenwsfdrue2h3lg0n8lsch6dm8umpshj0dw8m2a
+   out  0[] PUSHDATA(20)[30dfc8535d17aaa3fc5d4eb2b0c9c4e0902df937] (001430dfc8535d17aaa3fc5d4eb2b0c9c4e0902df937)  0.47433573 BTC (47433573)
+        P2WPKH addr:bcrt1qxr0us56az7428lzaf6etpjwyuzgzm7fhy8tpt5
+   fee  0.0003782 BTC/wu, 0.00150843 BTC/vkB, 0.00102337 BTC/kB  0.00026096 BTC
+} 
+Dec-01 11:43:10.124 [JavaFX Application Thread] INFO  b.c.btc.wallet.WalletService: 
+tradingFeeTx:
+Transaction{356ccbef5117bfd173da943cffa1c16bef3533d2d663f43f09d56eb417329720, wtxid 7b52c68df4c29146dce04c47cd97e14368c0a8632b98d4236c715a2cf2266f9e
+weight: 690 wu, 173 virtual bytes, 255 bytes
+purpose: USER_PAYMENT
+   in   <empty>  0.48116861 BTC (48116861)
+        witness:3045022100fbcfaa37d07f378d6363360bb55e6c17d4cc5f209084eafaa995913ed29918730220590117f01e9c0a9571500a3d3554efbfcf0d8cd7d65d42729880cb506157212001 03c7d2ca00b40f29e010e8c343384ede03b83b7945dcd14ea27eac1bb72b4308ef
+        P2WPKH addr:bcrt1q2rqc5m20c24x0eymmdaztsm078rwnuj5kyltg4  outpoint:56e764cae4d1e03fc53d4d1f1a7961bfb968855bf2ce84d105028774bc484348:2
+   out  HASH160 PUSHDATA(20)[4c0e4893237f85479f489b32c8ff0faf3ee2e1c9] EQUAL (a9144c0e4893237f85479f489b32c8ff0faf3ee2e1c987)  0.00005 BTC (5000)
+        P2SH addr:2MzBNTJDjjXgViKBGnatDU3yWkJ8pJkEg9w
+   out  0[] PUSHDATA(20)[ccdd04b47ccaaf1fa1f33fe18be9bb3f36185e4f] (0014ccdd04b47ccaaf1fa1f33fe18be9bb3f36185e4f)  0.00652192 BTC (652192)
+        P2WPKH addr:bcrt1qenwsfdrue2h3lg0n8lsch6dm8umpshj0dw8m2a
+   out  0[] PUSHDATA(20)[30dfc8535d17aaa3fc5d4eb2b0c9c4e0902df937] (001430dfc8535d17aaa3fc5d4eb2b0c9c4e0902df937)  0.47433573 BTC (47433573)
+        P2WPKH addr:bcrt1qxr0us56az7428lzaf6etpjwyuzgzm7fhy8tpt5
+   fee  0.0003782 BTC/wu, 0.00150843 BTC/vkB, 0.00102337 BTC/kB  0.00026096 BTC
+} 
+Dec-01 11:43:10.125 [JavaFX Application Thread] INFO  b.c.b.wallet.BtcWalletService: swap addressEntry with address bcrt1qf7k3d4sl90p9gdrh8tt74rg47dquw9j0lul4pl and offerId 8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 from context OFFER_FUNDING to available 
+Dec-01 11:43:10.125 [JavaFX Application Thread] INFO  b.common.taskrunner.TaskRunner: Run task: BuyerAsTakerCreatesDepositTxInputs 
+Dec-01 11:43:10.126 [JavaFX Application Thread] INFO  b.common.taskrunner.TaskRunner: Run task: TakerSendInputsForDepositTxRequest 
+Dec-01 11:43:10.127 [JavaFX Application Thread] INFO  b.c.t.p.t.t.TakerSendInputsForDepositTxRequest: Send InputsForDepositTxRequest with offerId 8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 and uid c5c61210-04d9-45a8-9fb2-37ca5cd63a40 to peer localhost:6666 
+Dec-01 11:43:10.140 [JavaFX Application Thread] INFO  b.c.o.a.OfferAvailabilityProtocol: AckMessage for OfferAvailabilityResponse arrived at makersNodeAddress localhost:6666. offerId=8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150, sourceUid=b7ae7bbc-f13a-4afa-b354-2f4f089943c4 
+Dec-01 11:43:10.144 [JavaFX Application Thread] INFO  b.core.offer.OpenOfferManager: Received AckMessage for OfferAvailabilityRequest with offerId 8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 and uid f4fd7e12-c736-40e8-b760-aaf181a723ac 
+Dec-01 11:43:10.180 [JavaFX Application Thread] INFO  b.c.p.PersistenceManager: Serializing PendingTrades took 35 msec 
+Dec-01 11:43:10.182 [JavaFX Application Thread] INFO  b.c.t.p.t.t.TakerSendInputsForDepositTxRequest: InputsForDepositTxRequest arrived at peer: offerId=8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150; uid=c5c61210-04d9-45a8-9fb2-37ca5cd63a40 
+Dec-01 11:43:10.182 [JavaFX Application Thread] INFO  b.c.t.protocol.TradeProtocol: TaskRunner successfully completed. Triggered from TAKE_OFFER, tradeId=8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 
+Dec-01 11:43:10.182 [JavaFX Application Thread] INFO  b.c.p.PersistenceManager: Serializing AddressEntryList took 0 msec 
+Dec-01 11:43:10.278 [Write-AddressEntryList_to-disk] INFO  b.c.p.PersistenceManager: Writing the serialized AddressEntryList completed in 95 msec 
+Dec-01 11:43:10.278 [Write-PendingTrades_to-disk] INFO  b.c.p.PersistenceManager: Writing the serialized PendingTrades completed in 98 msec 
+Dec-01 11:43:10.342 [JavaFX Application Thread] INFO  b.c.t.protocol.BuyerProtocol: Received InputsForDepositTxResponse from localhost:6666 with tradeId 8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 and uid c83dc7bd-d66b-4cf8-a010-0a559b5a6f22 
+Dec-01 11:43:10.343 [JavaFX Application Thread] INFO  b.c.t.p.FluentProtocol$Condition: We received a InputsForDepositTxResponse at phase INIT and state PREPARATION, tradeId=8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 
+Dec-01 11:43:10.344 [JavaFX Application Thread] INFO  b.common.taskrunner.TaskRunner: Run task: TakerProcessesInputsForDepositTxResponse 
+Dec-01 11:43:10.344 [JavaFX Application Thread] INFO  b.c.t.p.t.t.TakerProcessesInputsForDepositTxResponse: lockTime=4555, delay=-5 
+Dec-01 11:43:10.344 [JavaFX Application Thread] INFO  b.common.taskrunner.TaskRunner: Run task: ApplyFilter 
+Dec-01 11:43:10.344 [JavaFX Application Thread] INFO  b.common.taskrunner.TaskRunner: Run task: VerifyPeersAccountAgeWitness 
+Dec-01 11:43:10.345 [JavaFX Application Thread] INFO  b.common.taskrunner.TaskRunner: Run task: TakerVerifyAndSignContract 
+Dec-01 11:43:10.349 [JavaFX Application Thread] INFO  b.common.taskrunner.TaskRunner: Run task: TakerPublishFeeTx 
+Dec-01 11:43:10.349 [JavaFX Application Thread] INFO  org.bitcoinj.wallet.Wallet: commitTx of 356ccbef5117bfd173da943cffa1c16bef3533d2d663f43f09d56eb417329720 
+Dec-01 11:43:10.350 [JavaFX Application Thread] INFO  org.bitcoinj.wallet.Wallet:   marked 56e764cae4d1e03fc53d4d1f1a7961bfb968855bf2ce84d105028774bc484348:2 as spent by 356ccbef5117bfd173da943cffa1c16bef3533d2d663f43f09d56eb417329720 
+Dec-01 11:43:10.350 [JavaFX Application Thread] INFO  org.bitcoinj.wallet.Wallet:   56e764cae4d1e03fc53d4d1f1a7961bfb968855bf2ce84d105028774bc484348 prevtx <-unspent ->spent 
+Dec-01 11:43:10.350 [JavaFX Application Thread] INFO  org.bitcoinj.wallet.Wallet: ->pending: 356ccbef5117bfd173da943cffa1c16bef3533d2d663f43f09d56eb417329720 
+Dec-01 11:43:10.351 [JavaFX Application Thread] INFO  org.bitcoinj.wallet.Wallet: Estimated balance is now: 0.52885765 BTC 
+Dec-01 11:43:10.352 [JavaFX Application Thread] INFO  o.bitcoinj.wallet.WalletFiles: Saving wallet; last seen block is height 4550, date 2020-12-01T05:14:33Z, hash 4177d2fa63cc8c2b3395f9c733ec3ae5ca3cfcd83813042bc6a67e519df28da5 
+Dec-01 11:43:10.441 [JavaFX Application Thread] INFO  o.bitcoinj.wallet.WalletFiles: Save completed in 88.57 ms 
+Dec-01 11:43:10.444 [JavaFX Application Thread] INFO  o.b.core.TransactionBroadcast: Waiting for 1 peers required for broadcast, we have 1 ... 
+Dec-01 11:43:10.445 [JavaFX Application Thread] INFO  o.b.core.TransactionBroadcast: broadcastTransaction: We have 1 peers, adding 356ccbef5117bfd173da943cffa1c16bef3533d2d663f43f09d56eb417329720 to the memory pool 
+Dec-01 11:43:10.445 [JavaFX Application Thread] INFO  o.b.core.TransactionBroadcast: Sending to 1 peers, will wait for 0, sending to: Peer{[127.0.0.1]:18444, version=70015, subVer=/Satoshi:0.19.0.1/, services=1037 (NETWORK, BLOOM, WITNESS, NETWORK_LIMITED), time=2020-12-01 11:42:28, height=4550} 
+Dec-01 11:43:10.460 [JavaFX Application Thread] INFO  b.c.t.protocol.TradeProtocol: Received AckMessage for InputsForDepositTxRequest from localhost:6666 with tradeId 8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 and uid c5c61210-04d9-45a8-9fb2-37ca5cd63a40 
+Dec-01 11:43:10.460 [JavaFX Application Thread] INFO  bisq.core.trade.Trade: Set new state at BuyerAsTakerTrade (id=8319285): TAKER_PUBLISHED_TAKER_FEE_TX 
+Dec-01 11:43:10.460 [JavaFX Application Thread] INFO  b.common.taskrunner.TaskRunner: Run task: BuyerAsTakerSignsDepositTx 
+Dec-01 11:43:10.462 [JavaFX Application Thread] INFO  b.c.btc.wallet.WalletService: 
+makersDepositTx:
+Transaction{03cfd5377be011d19540de8f66a096f6d1c8fd67832175b1c570c8624b8893eb
+weight: 712 wu, 178 bytes
+purpose: UNKNOWN
+   in   <empty>
+        unconnected  outpoint:356ccbef5117bfd173da943cffa1c16bef3533d2d663f43f09d56eb417329720:1
+   in   <empty>
+        unconnected  outpoint:e6d604c9e0b27f712e48d1ebfb0ae77c69ba4dddd5ed0b0734869e8d7e1f6b93:1
+   out  0[] PUSHDATA(32)[85c376801eff8a2fb53616bec308b70cf81f2dfc4528cb9cd634a58a4fe4ae15] (002085c376801eff8a2fb53616bec308b70cf81f2dfc4528cb9cd634a58a4fe4ae15)  0.02226096 BTC (2226096)
+        P2WSH addr:bcrt1qshphdqq7l79zldfkz6lvxz9hpnup7t0ug55vh8xkxjjc5nly4c2s2rgwj7
+   out  RETURN PUSHDATA(32)[7a84fdd37491bae12210e50692cbeb4ca225c1a58303ce1e3e814bda5f1b6e54] (6a207a84fdd37491bae12210e50692cbeb4ca225c1a58303ce1e3e814bda5f1b6e54)  0.00 BTC (0)
+        unknown script type
+} 
+Dec-01 11:43:10.472 [JavaFX Application Thread] INFO  b.c.btc.wallet.WalletService: 
+takerSignsDepositTx:
+Transaction{03cfd5377be011d19540de8f66a096f6d1c8fd67832175b1c570c8624b8893eb, wtxid b9a4e4cf9cd290a3a29ad54a277d0c365f465c9c8f6de84df22f30ef6f73cc55
+weight: 822 wu, 206 virtual bytes, 288 bytes
+purpose: UNKNOWN
+   in   <empty>  0.00652192 BTC (652192)
+        witness:3044022025f32e8ff170bcff41cd46d03d491b93dd140e2b812db1e7fc17eb764bfbbbd902200a6861f07521bbf66eeb4094e5bbe3fe42c1d9e7a3f723e36a56bc3cd09400f601 03f232853344d314a947775bf24f475266ac27ab9579dd05c489933e236afdc238
+        P2WPKH addr:bcrt1qenwsfdrue2h3lg0n8lsch6dm8umpshj0dw8m2a  outpoint:356ccbef5117bfd173da943cffa1c16bef3533d2d663f43f09d56eb417329720:1
+   in   <empty>  0.016 BTC (1600000)
+        P2WPKH addr:bcrt1qh5j5dt0wrttrxpw9f6utc750xq08p9kgxkjsr2  outpoint:e6d604c9e0b27f712e48d1ebfb0ae77c69ba4dddd5ed0b0734869e8d7e1f6b93:1
+   out  0[] PUSHDATA(32)[85c376801eff8a2fb53616bec308b70cf81f2dfc4528cb9cd634a58a4fe4ae15] (002085c376801eff8a2fb53616bec308b70cf81f2dfc4528cb9cd634a58a4fe4ae15)  0.02226096 BTC (2226096)
+        P2WSH addr:bcrt1qshphdqq7l79zldfkz6lvxz9hpnup7t0ug55vh8xkxjjc5nly4c2s2rgwj7
+   out  RETURN PUSHDATA(32)[7a84fdd37491bae12210e50692cbeb4ca225c1a58303ce1e3e814bda5f1b6e54] (6a207a84fdd37491bae12210e50692cbeb4ca225c1a58303ce1e3e814bda5f1b6e54)  0.00 BTC (0)
+        unknown script type
+   fee  0.00031746 BTC/wu, 0.00126679 BTC/vkB, 0.00090611 BTC/kB  0.00026096 BTC
+} 
+Dec-01 11:43:10.472 [JavaFX Application Thread] INFO  b.common.taskrunner.TaskRunner: Run task: BuyerSetupDepositTxListener 
+Dec-01 11:43:10.473 [JavaFX Application Thread] INFO  bisq.core.trade.Trade: Set new state at BuyerAsTakerTrade (id=8319285): DEPOSIT_CONFIRMED_IN_BLOCK_CHAIN 
+Dec-01 11:43:10.478 [JavaFX Application Thread] INFO  b.c.btc.wallet.WalletService: 
+depositTx received from network:
+Transaction{8c59fcf26f0ae2ee919808d48958f5d338cb053da25c928771ff0f13c53b0818, wtxid c1ea20f0877b1f16ea5bbaa63cd826941912e58b20d74fb5a7ae508913844d71
+weight: 672 wu, 168 virtual bytes, 333 bytes
+updated: 2020-12-01T05:14:16Z
+included in best chain at: 2020-12-01T05:14:33Z
+purpose: UNKNOWN
+   in   <empty>  0.02215145 BTC (2215145)
+        witness:EMPTY 304402205d92fef1a59c2f240b6ef18c4867f7619f92fa4520b2b0ffb1d4684609ffa29702203097c3d745911a5fe5e10b61cce2b955cf77b39756e42242462675ca86e33e3c01 30440220557383fdf050c7c4cfa4afb0149ee5a609b81ed048fd12beb947f99823e5fed702201e68598a29d56e2a2a8ce7f53a5801e9d65a8f8b66d164076e62787b22dc01dd01 5221026f56b2d6bb8051b986fedfa03b0ea28bc86b7754c501fd9b21a1abae66d0a00f210225b4d64a6e3f571bb4b90b133185dbfc14bb2692609acf511b3ccec5e98714d252ae
+        P2WSH addr:bcrt1qshphdqq7l79zldfkz6lvxz9hpnup7t0ug55vh8xkxjjc5nly4c2s2rgwj7  outpoint:c60be75d65400bbc443ac34c6b9f444c1bd30288b572e8f1f9c5fbb6670d1cad:0
+   out  0[] PUSHDATA(20)[5fddd658e1a71b706bca1dfe9dedd9c91285ea45] (00145fddd658e1a71b706bca1dfe9dedd9c91285ea45)  0.016 BTC (1600000)
+        P2WPKH addr:bcrt1qtlwavk8p5udhq672rhlfmmweeyfgt6j9qn53ll
+   out  0[] PUSHDATA(20)[4831e5455928522b3c5f44acced3a1eea16aac93] (00144831e5455928522b3c5f44acced3a1eea16aac93)  0.006 BTC (600000)
+        P2WPKH addr:bcrt1qfqc7232e9pfzk0zlgjkva5apa6sk4tyn4g279k
+   fee  0.00022537 BTC/wu, 0.00090148 BTC/vkB, 0.0004548 BTC/kB  0.00015145 BTC
+} 
+Dec-01 11:43:10.479 [JavaFX Application Thread] INFO  bisq.core.trade.Trade: Set new state at BuyerAsTakerTrade (id=8319285): BUYER_SAW_DEPOSIT_TX_IN_NETWORK 
+Dec-01 11:43:10.479 [JavaFX Application Thread] WARN  bisq.core.trade.Trade: We got a state change to a previous phase.
+Old state is: DEPOSIT_CONFIRMED_IN_BLOCK_CHAIN. New state is: BUYER_SAW_DEPOSIT_TX_IN_NETWORK 
+Dec-01 11:43:10.479 [JavaFX Application Thread] INFO  b.c.b.wallet.BtcWalletService: swap addressEntry with address bcrt1qenwsfdrue2h3lg0n8lsch6dm8umpshj0dw8m2a and offerId 8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 from context RESERVED_FOR_TRADE to available 
+Dec-01 11:43:10.479 [JavaFX Application Thread] INFO  b.common.taskrunner.TaskRunner: Run task: BuyerAsTakerSendsDepositTxMessage 
+Dec-01 11:43:10.479 [JavaFX Application Thread] INFO  b.c.t.p.t.b.BuyerAsTakerSendsDepositTxMessage: Send DepositTxMessage to peer localhost:6666. tradeId=8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150, uid=cc103161-e4fb-4a9e-bfa3-27dcf56febd2 
+Dec-01 11:43:10.487 [JavaFX Application Thread] INFO  b.c.t.p.t.b.BuyerAsTakerSendsDepositTxMessage: DepositTxMessage arrived at peer localhost:6666. tradeId=8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150, uid=cc103161-e4fb-4a9e-bfa3-27dcf56febd2 
+Dec-01 11:43:10.487 [JavaFX Application Thread] INFO  b.c.t.protocol.TradeProtocol: TaskRunner successfully completed. Triggered from InputsForDepositTxResponse, tradeId=8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 
+Dec-01 11:43:10.487 [JavaFX Application Thread] INFO  b.c.t.protocol.TradeProtocol: Send AckMessage for InputsForDepositTxResponse to peer localhost:6666. tradeId=8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150, sourceUid=c83dc7bd-d66b-4cf8-a010-0a559b5a6f22 
+Dec-01 11:43:10.493 [JavaFX Application Thread] INFO  b.c.t.protocol.TradeProtocol: AckMessage for InputsForDepositTxResponse arrived at peer localhost:6666. tradeId=8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150, sourceUid=c83dc7bd-d66b-4cf8-a010-0a559b5a6f22 
+Dec-01 11:43:10.572 [JavaFX Application Thread] INFO  b.c.t.protocol.BuyerProtocol: Received DelayedPayoutTxSignatureRequest from localhost:6666 with tradeId 8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 and uid 82c6bc50-d8bc-4dec-8938-6248ea717de7 
+Dec-01 11:43:10.574 [JavaFX Application Thread] ERROR b.c.t.protocol.TradeProtocol: We received a DelayedPayoutTxSignatureRequest but we are are not in the expected phase. Expected phases=[TAKER_FEE_PUBLISHED], Trade phase=DEPOSIT_PUBLISHED, Trade state= BUYER_SAW_DEPOSIT_TX_IN_NETWORK, tradeId=8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 
+Dec-01 11:43:10.574 [JavaFX Application Thread] ERROR b.c.t.protocol.TradeProtocol: Task runner failed with error We received a DelayedPayoutTxSignatureRequest but we are are not in the expected phase. Expected phases=[TAKER_FEE_PUBLISHED], Trade phase=DEPOSIT_PUBLISHED, Trade state= BUYER_SAW_DEPOSIT_TX_IN_NETWORK, tradeId=8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150. Triggered from INVALID_PHASE 
+Dec-01 11:43:10.584 [JavaFX Application Thread] INFO  b.c.p.PersistenceManager: Serializing PendingTrades took 2 msec 
+Dec-01 11:43:10.592 [JavaFX Application Thread] INFO  b.c.t.protocol.TradeProtocol: Received AckMessage for DepositTxMessage from localhost:6666 with tradeId 8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 and uid cc103161-e4fb-4a9e-bfa3-27dcf56febd2 
+Dec-01 11:43:10.666 [JavaFX Application Thread] INFO  b.c.p.PersistenceManager: Serializing AddressEntryList took 0 msec 
+Dec-01 11:43:10.667 [Write-PendingTrades_to-disk] INFO  b.c.p.PersistenceManager: Writing the serialized PendingTrades completed in 83 msec 
+Dec-01 11:43:10.711 [Write-AddressEntryList_to-disk] INFO  b.c.p.PersistenceManager: Writing the serialized AddressEntryList completed in 45 msec 
+Dec-01 11:43:11.705 [JavaFX Application Thread] INFO  b.c.p.PersistenceManager: Serializing PreferencesPayload took 1 msec 
+Dec-01 11:43:11.761 [Write-PreferencesPayload_to-disk] INFO  b.c.p.PersistenceManager: Writing the serialized PreferencesPayload completed in 56 msec 
+Dec-01 11:43:12.720 [JavaFX Application Thread] INFO  b.n.p2p.storage.P2PDataStorage: Remove 1 expired data entries 
+Dec-01 11:43:12.744 [JavaFX Application Thread] INFO  b.c.b.wallet.BtcWalletService: resetAddressEntriesForOpenOffer offerId=8319285-52e33d24-ad09-4418-9ce0-053e8d05dff9-150 
+Dec-01 11:43:12.912 [JavaFX Application Thread] INFO  b.d.m.p.p.PendingTradesViewModel: UI tradeState=BUYER_SAW_DEPOSIT_TX_IN_NETWORK, id=8319285 
+Dec-01 11:43:12.921 [JavaFX Application Thread] WARN  bisq.core.trade.Trade: delayedPayoutTxBytes are null 
+Dec-01 11:43:12.921 [JavaFX Application Thread] ERROR b.c.trade.TradeDataValidation: DelayedPayoutTx must not be null 
+Dec-01 11:43:12.987 [JavaFX Application Thread] INFO  b.c.p.PersistenceManager: Serializing SequenceNumberMap took 1 msec 
+Dec-01 11:43:13.037 [Write-SequenceNumberMap_to-disk] INFO  b.c.p.PersistenceManager: Writing the serialized SequenceNumberMap completed in 50 msec 
+Dec-01 11:43:16.101 [JavaFX Application Thread] INFO  b.d.m.p.p.PendingTradesViewModel: UI tradeState=BUYER_SAW_DEPOSIT_TX_IN_NETWORK, id=8319285 
+Dec-01 11:43:16.103 [JavaFX Application Thread] WARN  bisq.core.trade.Trade: delayedPayoutTxBytes are null 
+Dec-01 11:43:16.103 [JavaFX Application Thread] ERROR b.c.trade.TradeDataValidation: DelayedPayoutTx must not be null 
+Dec-01 11:43:16.289 [JavaFX Application Thread] INFO  b.c.p.PersistenceManager: Serializing PreferencesPayload took 0 msec 
+Dec-01 11:43:16.324 [Write-PreferencesPayload_to-disk] INFO  b.c.p.PersistenceManager: Writing the serialized PreferencesPayload completed in 35 msec 
+Dec-01 11:43:28.930 [JavaFX Application Thread] INFO  b.n.p2p.network.Statistic: Network statistics:
+Bytes sent: 49.22265625 kb;
+Number of sent messages/Sent messages: 27 / {PreliminaryGetDataRequest=1, AddDataMessage=3, GetDaoStateHashesRequest=1, GetBlocksRequest=1, AddPersistableNetworkPayloadMessage=4, PrefixedSealedAndSignedMessage=7, RemoveDataMessage=3, GetUpdatedDataRequest=2, GetPeersRequest=4, BundleOfEnvelopes=1};
+Number of sent messages per sec: 0.45;
+Bytes received: 302.5439453125 kb
+
