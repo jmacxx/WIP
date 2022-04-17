@@ -1,0 +1,17 @@
+// To update the `dependencyVerification` block below (we don't add local bisq modules and org.openjfx libraries as
+// those cause problems):
+//
+// 1. Remove the block entirely
+// 2. Replace the block with the following command:
+//
+//    ./gradlew -q calculateChecksums | grep -v 'bisq:\|org.openjfx:' >> gradle/witness/gradle-witness.gradle
+//
+// 3. Run `git diff` to verify that expected hashes have changed
+// 4. Commit the changes
+//
+// See https://github.com/signalapp/gradle-witness#using-witness for further details.
+
+dependencyVerification {
+    verify = [
+    ]
+}
