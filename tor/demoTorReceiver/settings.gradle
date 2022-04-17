@@ -1,0 +1,4 @@
+import org.gradle.util.GradleVersion
+
+def minGradleVersion = GradleVersion.version("4.10")
+

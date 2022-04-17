@@ -1,0 +1,88 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+version = '0.1'
+archivesBaseName = 'demoTorReceiver'
+
+ext { // in alphabetical order
+    langVersion = '3.11'
+    logbackVersion = '1.1.11'
+    netlayerVersion = '0.7.2'   // Tag from https://github.com/bisq-network/netlayer/tags based on externaltor branch
+//    netlayerVersion = 'jmacxx'  // optional local build of netlayer
+}
+
+buildscript {
+    repositories { mavenCentral() }
+    dependencies {
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.4' }
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation("com.github.bisq-network.netlayer:tor.external:$netlayerVersion") {
+        exclude(module: 'slf4j-api')
+    }
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation "ch.qos.logback:logback-core:$logbackVersion"
+    implementation "ch.qos.logback:logback-classic:$logbackVersion"
+}
+
+application {
+    mainClassName = 'demoTorReceiver.Main'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'demoTorReceiver.Main'
+        )
+    }
+}
+
+build.dependsOn installDist
+installDist.destinationDir = file('build/app')
+distZip.enabled = false
+
+installDist {
+    doLast {
+        // copy generated shell scripts directly to the project
+        // root directory for discoverability and ease of use
+        copy {
+            from "$destinationDir/bin"
+            into rootProject.projectDir
+        }
+        // copy libs required for generated shell script classpaths to 'lib' dir under
+        // the project root directory
+        copy {
+            from "$destinationDir/lib"
+            into "${rootProject.projectDir}/lib"
+        }
+        def unixScriptFile = file("${rootProject.projectDir}/$applicationName")
+        unixScriptFile.text = unixScriptFile.text.replace(
+            'cd "`dirname \\"$PRG\\"`/.." >/dev/null', 'cd "`dirname \\"$PRG\\"`" >/dev/null')
+        delete fileTree(dir: rootProject.projectDir, include: '*.bat')
+    }
+}
+
+sourceCompatibility = 1.10
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+
