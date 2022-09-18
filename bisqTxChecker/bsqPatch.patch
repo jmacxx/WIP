@@ -1,0 +1,83 @@
+diff --git a/desktop/src/main/java/bisq/desktop/main/dao/economy/supply/dao/DaoChartDataModel.java b/desktop/src/main/java/bisq/desktop/main/dao/economy/supply/dao/DaoChartDataModel.java
+index 3650e5a..26b70b5 100644
+--- a/desktop/src/main/java/bisq/desktop/main/dao/economy/supply/dao/DaoChartDataModel.java
++++ b/desktop/src/main/java/bisq/desktop/main/dao/economy/supply/dao/DaoChartDataModel.java
+@@ -21,9 +21,11 @@ import bisq.desktop.components.chart.ChartDataModel;
+ 
+ import bisq.core.dao.state.DaoStateService;
+ import bisq.core.dao.state.model.blockchain.Tx;
++import bisq.core.dao.state.model.blockchain.TxType;
+ import bisq.core.dao.state.model.governance.Issuance;
+ import bisq.core.dao.state.model.governance.IssuanceType;
+ 
++import bisq.common.config.Config;
+ import bisq.common.util.Hex;
+ 
+ import javax.inject.Inject;
+@@ -31,13 +33,24 @@ import javax.inject.Singleton;
+ 
+ import java.time.Instant;
+ 
++import java.text.MessageFormat;
++
++import java.io.File;
++import java.io.FileWriter;
++import java.io.IOException;
++
++import java.util.ArrayList;
+ import java.util.Collection;
++import java.util.Collections;
+ import java.util.GregorianCalendar;
+ import java.util.HashMap;
++import java.util.List;
+ import java.util.Map;
+ import java.util.Set;
+ import java.util.TimeZone;
++import java.util.TreeMap;
+ import java.util.concurrent.ConcurrentHashMap;
++import java.util.concurrent.atomic.AtomicReference;
+ import java.util.function.Function;
+ import java.util.function.Predicate;
+ import java.util.stream.Collectors;
+@@ -233,6 +246,40 @@ public class DaoChartDataModel extends ChartDataModel {
+             return bsqTradeFeeByIntervalAfterTagging;
+         }
+ 
++        // HERE
++        Map<String, Integer> map = new HashMap<>();
++        map = daoStateService.getTradeFeeTxs().stream()
++                .filter(e -> dateFilter.test(toTimeInterval(Instant.ofEpochMilli(e.getTime()))))
++                .collect(Collectors.toMap(Tx::getId, Tx::getBlockHeight));
++        // convert to list, sort, then back to map -> sorting stays
++        List<Map.Entry<String, Integer>> list = new ArrayList<>(map.entrySet());
++        list.sort(Map.Entry.comparingByValue());
++        Collections.reverse(list);
++
++        try {
++            File myObj = new File("/tmp/bisqTradeTxns_bsq.txt");
++            if (myObj.createNewFile()) {
++                System.out.println("File created: " + myObj.getName());
++            } else {
++                System.out.println("File already exists.");
++            }
++            FileWriter myWriter = new FileWriter(myObj, false);
++            for (Map.Entry<String, Integer> entry : list) {
++                try {
++                    String info = MessageFormat.format("{0}:{1}\n", entry.getKey(), entry.getValue().toString());
++                    myWriter.write(info);
++                } catch (Exception e) {
++                    System.out.println("An error occurred.");
++                    e.printStackTrace();
++                }
++            }
++            myWriter.close();
++        } catch (IOException e) {
++            System.out.println("An error occurred.");
++            e.printStackTrace();
++        }
++
++
+         bsqTradeFeeByIntervalAfterTagging = getBsqTradeFeeByInterval().entrySet().stream()
+                 .filter(e -> getPostTagDateFilter().test(e.getKey()))
+                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
